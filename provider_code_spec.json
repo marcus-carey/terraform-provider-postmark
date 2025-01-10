@@ -1,0 +1,990 @@
+{
+	"datasources": [
+		{
+			"name": "domain",
+			"schema": {
+				"attributes": [
+					{
+						"name": "domainid",
+						"int64": {
+							"computed_optional_required": "required",
+							"description": "The ID for the Domain that should be retrieved."
+						}
+					},
+					{
+						"name": "dkimhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimtest_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimupdate_status",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "required"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required"
+						}
+					},
+					{
+						"name": "return_path_domain",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_cnamevalue",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_verified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spftext_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "safe_to_remove_revoked_key_from_dns",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "weak_dkim",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "sender_signature",
+			"schema": {
+				"attributes": [
+					{
+						"name": "signatureid",
+						"int64": {
+							"computed_optional_required": "required",
+							"description": "The ID for the Sender Signature that should be retrieved."
+						}
+					},
+					{
+						"name": "confirmed",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimtest_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimupdate_status",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "domain",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "email_address",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "required"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "reply_to_email_address",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_cnamevalue",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_verified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spftext_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "safe_to_remove_revoked_key_from_dns",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "weak_dkim",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "server",
+			"schema": {
+				"attributes": [
+					{
+						"name": "api_tokens",
+						"list": {
+							"computed_optional_required": "computed",
+							"element_type": {
+								"string": {}
+							}
+						}
+					},
+					{
+						"name": "color",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "required"
+						}
+					},
+					{
+						"name": "delivery_type",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "inbound_address",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "inbound_domain",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "inbound_hash",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "inbound_hook_url",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "inbound_spam_threshold",
+						"int64": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "post_first_open_only",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "raw_email_enabled",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "server_link",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "smtp_api_activated",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "track_links",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "track_opens",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "include_bounce_content_in_hook",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "enable_smtp_api_error_hooks",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					}
+				]
+			}
+		}
+	],
+	"provider": {
+		"name": "postmark",
+		"schema": {
+			"attributes": [
+				{
+					"name": "account_token",
+					"string": {
+						"optional_required": "required",
+						"sensitive": true,
+						"description": "The Account API token to use for API requests. Managed at https://account.postmarkapp.com/api_tokens."
+					}
+				}
+			]
+		}
+	},
+	"resources": [
+		{
+			"name": "domain",
+			"schema": {
+				"attributes": [
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Domain name"
+						}
+					},
+					{
+						"name": "return_path_domain",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "A custom value for the Return-Path domain. It is an optional field, but it must be a subdomain of your From Email domain and must have a CNAME record that points to pm.mtasv.net."
+						}
+					},
+					{
+						"name": "dkimhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimtest_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimupdate_status",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+											}
+										],
+										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "return_path_domain_cnamevalue",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_verified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spftext_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "safe_to_remove_revoked_key_from_dns",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "weak_dkim",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "domainid",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "The ID for the Domain that should be retrieved."
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "sender_signature",
+			"schema": {
+				"attributes": [
+					{
+						"name": "from_email",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "From email associated with sender signature."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "From name associated with sender signature."
+						}
+					},
+					{
+						"name": "reply_to_email",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Override for reply-to address."
+						}
+					},
+					{
+						"name": "return_path_domain",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "A custom value for the Return-Path domain. It is an optional field, but it must be a subdomain of your From Email domain and must have a CNAME record that points to pm.mtasv.net."
+						}
+					},
+					{
+						"name": "confirmed",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimpending_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_host",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimrevoked_text_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimtest_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimupdate_status",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "dkimverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "domain",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "email_address",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+											}
+										],
+										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "reply_to_email_address",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_cnamevalue",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "return_path_domain_verified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfhost",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spftext_value",
+						"string": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "spfverified",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "safe_to_remove_revoked_key_from_dns",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "weak_dkim",
+						"bool": {
+							"computed_optional_required": "computed"
+						}
+					},
+					{
+						"name": "signatureid",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "The ID for the Sender Signature that should be retrieved."
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "server",
+			"schema": {
+				"attributes": [
+					{
+						"name": "color",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Color of the server in the server list, for quick identification. Possible values - 'purple', 'blue', 'turquoise', 'green', 'red', 'yellow', 'grey', 'orange'",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"purple\",\n\"blue\",\n\"turquoise\",\n\"green\",\n\"red\",\n\"yellow\",\n\"orange\",\n\"grey\",\n)"
+									}
+								}
+							],
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "delivery_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Specifies the type of environment for your server. Possible options - Live Sandbox. Defaults to Live if not specified. This cannot be changed after the server has been created.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"Live\",\n\"Sandbox\",\n)"
+									}
+								}
+							],
+							"default": {
+								"static": "Live"
+							}
+						}
+					},
+					{
+						"name": "inbound_domain",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Inbound domain for MX setup.",
+							"default": {
+								"static": ""
+							}
+						}
+					},
+					{
+						"name": "inbound_hook_url",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "URL to POST to every time an inbound event occurs.",
+							"default": {
+								"static": ""
+							}
+						}
+					},
+					{
+						"name": "inbound_spam_threshold",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "The maximum spam score for an inbound message before it's blocked.",
+							"default": {
+								"static": 0
+							}
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Server name"
+						}
+					},
+					{
+						"name": "post_first_open_only",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.",
+							"default": {
+								"static": false
+							}
+						}
+					},
+					{
+						"name": "raw_email_enabled",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "When enabled, the raw email content will be included with inbound webhook payloads under the RawEmail key.",
+							"default": {
+								"static": false
+							}
+						}
+					},
+					{
+						"name": "smtp_api_activated",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Specifies whether or not SMTP is enabled on this server.",
+							"default": {
+								"static": false
+							}
+						}
+					},
+					{
+						"name": "track_links",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Indicates if all emails being sent through this server should have link tracking enabled for links in their HTML or Text bodies. Possible options - 'None', 'HtmlAndText', 'HtmlOnly', 'TextOnly'",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"None\",\n\"HtmlAndText\",\n\"HtmlOnly\",\n\"TextOnly\",\n)"
+									}
+								}
+							],
+							"default": {
+								"static": "None"
+							}
+						}
+					},
+					{
+						"name": "track_opens",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Indicates if all emails being sent through this server have open tracking enabled.",
+							"default": {
+								"static": false
+							}
+						}
+					},
+					{
+						"name": "include_bounce_content_in_hook",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Include bounce content in webhook.",
+							"default": {
+								"static": false
+							}
+						}
+					},
+					{
+						"name": "enable_smtp_api_error_hooks",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Specifies whether or not SMTP API Errors will be included with bounce webhooks.",
+							"default": {
+								"static": false
+							}
+						}
+					},
+					{
+						"name": "api_tokens",
+						"list": {
+							"computed_optional_required": "computed",
+							"element_type": {
+								"string": {}
+							},
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+											}
+										],
+										"schema_definition": "listplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+											}
+										],
+										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "inbound_address",
+						"string": {
+							"computed_optional_required": "computed",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "inbound_hash",
+						"string": {
+							"computed_optional_required": "computed",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "server_link",
+						"string": {
+							"computed_optional_required": "computed",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+											}
+										],
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	],
+	"version": "0.1"
+}
