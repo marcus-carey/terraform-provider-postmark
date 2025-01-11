@@ -1,0 +1,10 @@
+# Copyright (c) HashiCorp, Inc.
+
+language: go
+
+go:
+  - 1.x
+
+os:
+  - linux
+  - osx

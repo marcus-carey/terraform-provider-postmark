@@ -1,0 +1,15 @@
+# Copyright (c) HashiCorp, Inc.
+
+sudo: false
+
+language: go
+
+go:
+  - 1.x
+  - tip
+
+branches:
+  only:
+    - master
+
+script: make test

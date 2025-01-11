@@ -1,0 +1,9 @@
+# Copyright (c) HashiCorp, Inc.
+
+language: go
+before_install:
+  - go mod download
+  - make tools
+go:
+  - "1.18"
+script: make test
