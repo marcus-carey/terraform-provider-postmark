@@ -13,8 +13,6 @@ description: |-
 ## Example Usage
 
 ```terraform
-# Copyright (c) HashiCorp, Inc.
-
 variable "postmark_account_token" {
   type = string
 }

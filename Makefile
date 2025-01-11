@@ -1,19 +1,18 @@
 HOSTNAME=marcus.carey
 NAMESPACE=terraform
-NAME=postmark
+PKG_NAME=postmark
 VERSION=1.0
 
 OS_NAME:=$(shell uname -s | tr ‘[:upper:]’ ‘[:lower:]’)
 HW_CLASS:=$(shell uname -m)
 OS_ARCH=${OS_NAME}_${HW_CLASS}
 
-BINARY=terraform-provider-${NAME}
-PLUGIN_DIR=${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+BINARY=terraform-provider-${PKG_NAME}
+PLUGIN_DIR=${HOSTNAME}/${NAMESPACE}/${PKG_NAME}/${VERSION}/${OS_ARCH}
 
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
-PKG_NAME=github
 
 default: build
 
@@ -58,24 +57,6 @@ vet:
 		echo "and fix them if necessary before submitting the code for review."; \
 		exit 1; \
 	fi
-
-website:
-ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
-	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
-	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
-endif
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
-
-website-lint:
-	@echo "==> Checking website against linters..."
-	@misspell -error -source=text website/
-
-website-test:
-ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
-	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
-	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
-endif
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 .PHONY: build test testacc vet fmt fmtcheck lint tools test-compile website website-lint website-test
 

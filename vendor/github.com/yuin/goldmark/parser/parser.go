@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 // Package parser contains stuff that are related to parsing a Markdown text.
 package parser
 

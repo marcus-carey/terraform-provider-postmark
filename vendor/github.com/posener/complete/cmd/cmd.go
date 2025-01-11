@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 // Package cmd used for command line options for the complete tool
 package cmd
 

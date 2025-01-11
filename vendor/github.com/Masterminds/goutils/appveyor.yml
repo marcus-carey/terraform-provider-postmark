@@ -1,5 +1,3 @@
-# Copyright (c) HashiCorp, Inc.
-
 version: build-{build}.{branch}
 
 clone_folder: C:\gopath\src\github.com\Masterminds\goutils

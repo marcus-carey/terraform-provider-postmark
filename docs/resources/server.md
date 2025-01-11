@@ -13,8 +13,6 @@ description: |-
 ## Example Usage
 
 ```terraform
-# Copyright (c) HashiCorp, Inc.
-
 resource "postmark_server" "test" {
   name        = "Test-Terraform"
   color       = "green"
@@ -58,8 +56,6 @@ resource "postmark_server" "test" {
 Import is supported using the following syntax:
 
 ```shell
-# Copyright (c) HashiCorp, Inc.
-
 # Server can be imported by specifying the server ID
 terraform import postmark_server.example 123
 ```

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 /*
 Package uniseg implements Unicode Text Segmentation according to Unicode
 Standard Annex #29 (http://unicode.org/reports/tr29/).

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 package markdown
 
 // indentation tracks indentation data for a mardown writer.

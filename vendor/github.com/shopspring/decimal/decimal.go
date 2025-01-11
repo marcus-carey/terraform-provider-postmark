@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 // Package decimal implements an arbitrary precision fixed-point decimal.
 //
 // The zero-value of a Decimal is 0, as you would expect.

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 // Package tfsdklog provides helper functions for logging from SDKs and
 // frameworks for building Terraform plugins.
 //

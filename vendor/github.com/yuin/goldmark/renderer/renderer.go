@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 // Package renderer renders the given AST to certain formats.
 package renderer
 

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-
 package uniseg
 
 // The unicode properties. Only the ones needed in the context of this package

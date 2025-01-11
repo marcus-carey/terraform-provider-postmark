@@ -1,5 +1,3 @@
-# Copyright (c) HashiCorp, Inc.
-
 issues:
   # Print all issues reported by all linters.
   max-issues-per-linter: 0
