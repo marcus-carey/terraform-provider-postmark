@@ -1,3 +1,5 @@
+// Copyright (c) HashiCorp, Inc.
+
 //+build !go1.10
 
 package xstrings

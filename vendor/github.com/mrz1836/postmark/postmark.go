@@ -1,3 +1,5 @@
+// Copyright (c) HashiCorp, Inc.
+
 // Package postmark encapsulates the Postmark API via Go
 package postmark
 

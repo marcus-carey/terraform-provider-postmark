@@ -1,3 +1,5 @@
+// Copyright (c) HashiCorp, Inc.
+
 //nolint:all
 package util
 

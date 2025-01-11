@@ -1,3 +1,5 @@
+// Copyright (c) HashiCorp, Inc.
+
 //nolint:golint,lll,misspell
 package util
 
