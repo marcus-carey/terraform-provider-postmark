@@ -12,13 +12,12 @@ PLUGIN_DIR=${HOSTNAME}/${NAMESPACE}/${PKG_NAME}/${VERSION}/${OS_ARCH}
 
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
-WEBSITE_REPO=github.com/hashicorp/terraform-website
 
 default: build
 
 tools:
 	go install github.com/client9/misspell/cmd/misspell@v0.3.4
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.51.1
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.63.4
 
 build: fmtcheck
 	go build ./...

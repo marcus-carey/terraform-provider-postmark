@@ -3,14 +3,14 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/mrz1836/postmark"
 	"strconv"
 	"terraform-provider-postmark/internal/provider/resource_server"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/mrz1836/postmark"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -28,15 +28,15 @@ type serverResource struct {
 	client *postmark.Client
 }
 
-func (r *serverResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *serverResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_server"
 }
 
-func (r *serverResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *serverResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = resource_server.ServerResourceSchema(ctx)
 }
 
-func (r *serverResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *serverResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -72,7 +72,7 @@ func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	// Create API call logic
-	resp.Diagnostics.Append(r.createFromApi(ctx, &data)...)
+	resp.Diagnostics.Append(r.createFromAPI(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -93,7 +93,7 @@ func (r *serverResource) Read(ctx context.Context, req resource.ReadRequest, res
 	}
 
 	// Read API call logic
-	resp.Diagnostics.Append(r.readFromApi(ctx, &data)...)
+	resp.Diagnostics.Append(r.readFromAPI(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -114,7 +114,7 @@ func (r *serverResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	// Update API call logic
-	resp.Diagnostics.Append(r.updateFromApi(ctx, &data)...)
+	resp.Diagnostics.Append(r.updateFromAPI(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -135,28 +135,26 @@ func (r *serverResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	}
 
 	// Delete API call logic
-	resp.Diagnostics.Append(r.deleteFromApi(ctx, &data)...)
+	resp.Diagnostics.Append(r.deleteFromAPI()...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 }
 
-func (r *serverResource) readFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	res, err := r.client.GetServer(context.Background(), server.Id.ValueString())
-
+func (r *serverResource) readFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
+	res, err := r.client.GetServer(ctx, server.Id.ValueString())
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
 	}
 
-	return mapServerResourceFromApi(ctx, server, res)
+	return mapServerResourceFromAPI(ctx, server, res)
 }
 
-func (r *serverResource) createFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	body := mapServerResourceToApi(ctx, server)
-	res, err := r.client.CreateServer(context.Background(), body)
-
+func (r *serverResource) createFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
+	body := mapServerResourceToAPI(server)
+	res, err := r.client.CreateServer(ctx, body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create server, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
@@ -167,30 +165,29 @@ func (r *serverResource) createFromApi(ctx context.Context, server *resource_ser
 		return diag.Diagnostics{clientDiag}
 	}
 
-	return mapServerResourceFromApi(ctx, server, res)
+	return mapServerResourceFromAPI(ctx, server, res)
 }
 
-func (r *serverResource) updateFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
+func (r *serverResource) updateFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
 	id := server.Id.ValueString()
-	body := mapServerResourceToApi(ctx, server)
+	body := mapServerResourceToAPI(server)
 	body.ID, _ = strconv.ParseInt(id, 10, 64)
-	res, err := r.client.EditServer(context.Background(), id, body)
-
+	res, err := r.client.EditServer(ctx, id, body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update server %s, got error: %s\nRequest Body:\n%#v", id, err, body))
 		return diag.Diagnostics{clientDiag}
 	}
 
-	return mapServerResourceFromApi(ctx, server, res)
+	return mapServerResourceFromAPI(ctx, server, res)
 }
 
-func (r *serverResource) deleteFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
+func (r *serverResource) deleteFromAPI() diag.Diagnostics {
 	// TODO - Implement server deletion, but catch error, since not all servers can be deleted via the api
 	clientDiag := diag.NewWarningDiagnostic("Server Deletion Not Supported", "Server must be deleted manually in the Postmark UI.")
 	return diag.Diagnostics{clientDiag}
 }
 
-func mapServerResourceToApi(ctx context.Context, server *resource_server.ServerModel) postmark.Server {
+func mapServerResourceToAPI(server *resource_server.ServerModel) postmark.Server {
 	return postmark.Server{
 		Name:                       server.Name.ValueString(),
 		Color:                      server.Color.ValueString(),
@@ -208,11 +205,16 @@ func mapServerResourceToApi(ctx context.Context, server *resource_server.ServerM
 	}
 }
 
-func mapServerResourceFromApi(ctx context.Context, server *resource_server.ServerModel, res postmark.Server) diag.Diagnostics {
+func mapServerResourceFromAPI(ctx context.Context, server *resource_server.ServerModel, res postmark.Server) diag.Diagnostics {
 	server.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
 	server.Name = types.StringValue(res.Name)
 
 	apiTokenDiags := server.ApiTokens.ElementsAs(ctx, &res.APITokens, false)
+
+	if apiTokenDiags.HasError() {
+		return apiTokenDiags
+	}
+
 	server.ApiTokens, apiTokenDiags = types.ListValueFrom(ctx, server.ApiTokens.ElementType(ctx), res.APITokens)
 
 	if apiTokenDiags.HasError() {

@@ -2,9 +2,9 @@ package provider
 
 import (
 	"context"
+	"terraform-provider-postmark/internal/provider/datasource_sender_signature"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -16,26 +16,16 @@ func NewSenderSignatureDataSource() datasource.DataSource {
 
 type senderSignatureDataSource struct{}
 
-type senderSignatureDataSourceModel struct {
-	Id types.String `tfsdk:"id"`
-}
-
-func (d *senderSignatureDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *senderSignatureDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_sender_signature"
 }
 
-func (d *senderSignatureDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Computed: true,
-			},
-		},
-	}
+func (d *senderSignatureDataSource) Schema(ctx context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = datasource_sender_signature.SenderSignatureDataSourceSchema(ctx)
 }
 
 func (d *senderSignatureDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data senderSignatureDataSourceModel
+	var data datasource_sender_signature.SenderSignatureModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)

@@ -3,34 +3,120 @@
 
 run:
   deadline: 3m
+  concurrency: 8
+  tests: true
   modules-download-mode: vendor
+  go: ""
+
+output:
+  formats:
+    - format: colored-line-number
+      path: stdout
+  print-issued-lines: false
+  print-linter-name: true
+  path-prefix: ""
+  sort-results: true
+  fix: false
 
 issues:
+  max-issues-per-linter: 0
   max-per-linter: 0
   max-same-issues: 0
+  uniq-by-line: false
+  new: false
 
 linters:
   disable-all: true
+  fast: false
   enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - copyloopvar
     - durationcheck
     - errcheck
-    - exportloopref
-    # - forcetypeassert
-    # - godot
+    - errname
+    - errorlint
+    - gocritic
+    - godot
     - gofmt
+    - gofumpt
+    - goimports
+    - gomoddirectives
+    - gosec
     - gosimple
+    - govet
     - ineffassign
     - makezero
     - misspell
-    # - nilerr
-    # - predeclared
+    - nakedret
+    - nilerr
+    - nilnil
+    - noctx
+    - nolintlint
+    - prealloc
+    - predeclared
+    - reassign
+    - revive
     - staticcheck
+    - stylecheck
+    - tagliatelle
     - tenv
+    - testableexamples
+    - thelper
+    - tparallel
     - unconvert
-    # - unparam
+    - unparam
     - unused
-    - vet
+    - usestdlibvars
+    - wastedassign
 
-linters-settings:
+linters-settings:linters-settings:
+  # I'm biased and I'm enabling more than 100 checks
+  # Might be too much for you. See https://go-critic.com/overview.html
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      # These 3 will detect many cases, but they do sense
+      # if it's performance oriented code
+      - hugeParam
+      - rangeExprCopy
+      - rangeValCopy
+
   errcheck:
-    ignore: github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema:ForceNew|Set,fmt:.*,io:Close
+    # Report `a := b.(MyStruct)` when `a, ok := ...` should be.
+    check-type-assertions: true # Default: false
+
+    # Report skipped checks:`num, _ := strconv.Atoi(numStr)`.
+    check-blank: true # Default: false
+
+    # Function to skip.
+    exclude-functions:
+      - io/ioutil.ReadFile
+      - io.Copy(*bytes.Buffer)
+      - io.Copy(os.Stdout)
+
+  govet:
+    disable:
+      - fieldalignment # I'm ok to waste some bytes
+
+  nakedret:
+    # No naked returns, ever.
+    max-func-lines: 1 # Default: 30
+
+  tagliatelle:
+    case:
+      rules:
+        json: snake # why it's not a `snake` by default?!
+        yaml: snake # why it's not a `snake` by default?!
+        xml: camel
+        bson: camel
+        avro: snake
+        mapstructure: kebab

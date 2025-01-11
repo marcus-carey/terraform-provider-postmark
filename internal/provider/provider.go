@@ -2,11 +2,12 @@ package provider
 
 import (
 	"context"
+	"terraform-provider-postmark/internal/provider/provider_postmark"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/mrz1836/postmark"
-	"terraform-provider-postmark/internal/provider/provider_postmark"
 )
 
 var _ provider.Provider = &postmarkProvider{}
@@ -23,7 +24,7 @@ type postmarkProvider struct {
 	version string
 }
 
-func (p *postmarkProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *postmarkProvider) Schema(ctx context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = provider_postmark.PostmarkProviderSchema(ctx)
 }
 
@@ -45,21 +46,20 @@ func (p *postmarkProvider) Configure(ctx context.Context, req provider.Configure
 	resp.ResourceData = client
 }
 
-func (p *postmarkProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *postmarkProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "postmark"
 	resp.Version = p.version
 }
 
-func (p *postmarkProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *postmarkProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewSenderSignatureDataSource,
 		NewDomainDataSource,
 		NewServerDataSource,
-		NewServersDataSource,
 	}
 }
 
-func (p *postmarkProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *postmarkProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewServerResource,
 		NewSenderSignatureResource,

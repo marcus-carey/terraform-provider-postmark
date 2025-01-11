@@ -3,14 +3,14 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/mrz1836/postmark"
 	"strconv"
 	"terraform-provider-postmark/internal/provider/datasource_server"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/mrz1836/postmark"
 )
 
 var _ datasource.DataSource = (*serverDataSource)(nil)
@@ -23,12 +23,11 @@ type serverDataSource struct {
 	client *postmark.Client
 }
 
-func (d *serverDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *serverDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_server"
 }
 
 func (d *serverDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-
 	tflog.Info(ctx, "Configuring the Server datasource")
 
 	if req.ProviderData == nil {
@@ -49,7 +48,7 @@ func (d *serverDataSource) Configure(ctx context.Context, req datasource.Configu
 	d.client = client
 }
 
-func (d *serverDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *serverDataSource) Schema(ctx context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = datasource_server.ServerDataSourceSchema(ctx)
 }
 
@@ -64,7 +63,7 @@ func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 
 	// Read API call logic
-	resp.Diagnostics.Append(d.readFromApi(ctx, &data)...)
+	resp.Diagnostics.Append(d.readFromAPI(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -74,9 +73,8 @@ func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *serverDataSource) readFromApi(ctx context.Context, server *datasource_server.ServerModel) diag.Diagnostics {
-	res, err := d.client.GetServer(context.Background(), server.Id.ValueString())
-
+func (d *serverDataSource) readFromAPI(ctx context.Context, server *datasource_server.ServerModel) diag.Diagnostics {
+	res, err := d.client.GetServer(ctx, server.Id.ValueString())
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
@@ -87,6 +85,11 @@ func (d *serverDataSource) readFromApi(ctx context.Context, server *datasource_s
 	server.Color = types.StringValue(res.Color)
 
 	apiTokenDiags := server.ApiTokens.ElementsAs(ctx, &res.APITokens, false)
+
+	if apiTokenDiags.HasError() {
+		return apiTokenDiags
+	}
+
 	server.ApiTokens, apiTokenDiags = types.ListValueFrom(ctx, server.ApiTokens.ElementType(ctx), res.APITokens)
 
 	if apiTokenDiags.HasError() {

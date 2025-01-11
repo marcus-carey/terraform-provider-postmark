@@ -2,9 +2,9 @@ package provider
 
 import (
 	"context"
+	"terraform-provider-postmark/internal/provider/resource_domain"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -16,26 +16,16 @@ func NewDomainResource() resource.Resource {
 
 type domainResource struct{}
 
-type domainResourceModel struct {
-	Id types.String `tfsdk:"id"`
-}
-
-func (r *domainResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *domainResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_domain"
 }
 
-func (r *domainResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Computed: true,
-			},
-		},
-	}
+func (r *domainResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = resource_domain.DomainResourceSchema(ctx)
 }
 
 func (r *domainResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data domainResourceModel
+	var data resource_domain.DomainModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -54,7 +44,7 @@ func (r *domainResource) Create(ctx context.Context, req resource.CreateRequest,
 }
 
 func (r *domainResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data domainResourceModel
+	var data resource_domain.DomainModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -70,7 +60,7 @@ func (r *domainResource) Read(ctx context.Context, req resource.ReadRequest, res
 }
 
 func (r *domainResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data domainResourceModel
+	var data resource_domain.DomainModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -86,7 +76,7 @@ func (r *domainResource) Update(ctx context.Context, req resource.UpdateRequest,
 }
 
 func (r *domainResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data domainResourceModel
+	var data resource_domain.DomainModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
