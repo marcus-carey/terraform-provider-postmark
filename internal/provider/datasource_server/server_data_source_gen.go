@@ -25,7 +25,7 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 			"enable_smtp_api_error_hooks": schema.BoolAttribute{
 				Computed: true,
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Required: true,
 			},
 			"inbound_address": schema.StringAttribute{
@@ -76,7 +76,7 @@ type ServerModel struct {
 	Color                      types.String `tfsdk:"color"`
 	DeliveryType               types.String `tfsdk:"delivery_type"`
 	EnableSmtpApiErrorHooks    types.Bool   `tfsdk:"enable_smtp_api_error_hooks"`
-	Id                         types.Int64  `tfsdk:"id"`
+	Id                         types.String `tfsdk:"id"`
 	InboundAddress             types.String `tfsdk:"inbound_address"`
 	InboundDomain              types.String `tfsdk:"inbound_domain"`
 	InboundHash                types.String `tfsdk:"inbound_hash"`

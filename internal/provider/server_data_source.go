@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/mrz1836/postmark"
+	"strconv"
 	"terraform-provider-postmark/internal/provider/datasource_server"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -69,25 +70,19 @@ func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	if data.Id.ValueInt64() == 0 {
-		resp.Diagnostics.AddError("Server Not Found", "Unable to locate server.")
-		return
-	}
-
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (d *serverDataSource) readFromApi(ctx context.Context, server *datasource_server.ServerModel) diag.Diagnostics {
-	id := toStringId(server.Id)
-	res, err := d.client.GetServer(context.Background(), id)
+	res, err := d.client.GetServer(context.Background(), server.Id.ValueString())
 
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
 	}
 
-	server.Id = types.Int64Value(res.ID)
+	server.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
 	server.Name = types.StringValue(res.Name)
 	server.Color = types.StringValue(res.Color)
 

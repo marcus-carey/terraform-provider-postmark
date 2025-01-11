@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/mrz1836/postmark"
 	"strconv"
@@ -12,7 +13,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 )
 
-var _ resource.Resource = (*serverResource)(nil)
+// Ensure the implementation satisfies the expected interfaces.
+var (
+	_ resource.Resource                = &serverResource{}
+	_ resource.ResourceWithConfigure   = &serverResource{}
+	_ resource.ResourceWithImportState = &serverResource{}
+)
 
 func NewServerResource() resource.Resource {
 	return &serverResource{}
@@ -48,6 +54,11 @@ func (r *serverResource) Configure(ctx context.Context, req resource.ConfigureRe
 	}
 
 	r.client = client
+}
+
+func (r *serverResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Retrieve import ID and save to id attribute
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
 func (r *serverResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -88,20 +99,12 @@ func (r *serverResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	if data.Id.ValueInt64() == 0 {
-		resp.Diagnostics.AddError("Server Not Found", "Unable to locate server.")
-		return
-	}
-
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *serverResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	//var existingData resource_server.ServerModel
 	var data resource_server.ServerModel
-
-	//resp.Diagnostics.Append(req.State.Get(ctx, &existingData)...)
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -109,13 +112,6 @@ func (r *serverResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	if data.Id.ValueInt64() == 0 {
-		resp.Diagnostics.AddError("Unable to update server", "Server ID is missing or invalid.")
-		return
-	}
-
-	//data.Id = existingData.Id
 
 	// Update API call logic
 	resp.Diagnostics.Append(r.updateFromApi(ctx, &data)...)
@@ -147,8 +143,7 @@ func (r *serverResource) Delete(ctx context.Context, req resource.DeleteRequest,
 }
 
 func (r *serverResource) readFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	id := toStringId(server.Id)
-	res, err := r.client.GetServer(context.Background(), id)
+	res, err := r.client.GetServer(context.Background(), server.Id.ValueString())
 
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
@@ -167,13 +162,18 @@ func (r *serverResource) createFromApi(ctx context.Context, server *resource_ser
 		return diag.Diagnostics{clientDiag}
 	}
 
+	if res.ID == 0 {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", "Unable to create server, got error: Server ID is 0.")
+		return diag.Diagnostics{clientDiag}
+	}
+
 	return mapServerResourceFromApi(ctx, server, res)
 }
 
 func (r *serverResource) updateFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	id := toStringId(server.Id)
+	id := server.Id.ValueString()
 	body := mapServerResourceToApi(ctx, server)
-	body.ID = server.Id.ValueInt64()
+	body.ID, _ = strconv.ParseInt(id, 10, 64)
 	res, err := r.client.EditServer(context.Background(), id, body)
 
 	if err != nil {
@@ -186,12 +186,8 @@ func (r *serverResource) updateFromApi(ctx context.Context, server *resource_ser
 
 func (r *serverResource) deleteFromApi(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
 	// TODO - Implement server deletion, but catch error, since not all servers can be deleted via the api
-	clientDiag := diag.NewErrorDiagnostic("Server Deletion Not Supported", "Server must be deleted manually in the Postmark UI.")
+	clientDiag := diag.NewWarningDiagnostic("Server Deletion Not Supported", "Server must be deleted manually in the Postmark UI.")
 	return diag.Diagnostics{clientDiag}
-}
-
-func toStringId(id types.Int64) string {
-	return strconv.FormatInt(id.ValueInt64(), 10)
 }
 
 func mapServerResourceToApi(ctx context.Context, server *resource_server.ServerModel) postmark.Server {
@@ -213,9 +209,8 @@ func mapServerResourceToApi(ctx context.Context, server *resource_server.ServerM
 }
 
 func mapServerResourceFromApi(ctx context.Context, server *resource_server.ServerModel, res postmark.Server) diag.Diagnostics {
-	server.Id = types.Int64Value(res.ID)
+	server.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
 	server.Name = types.StringValue(res.Name)
-	server.Color = types.StringValue(res.Color)
 
 	apiTokenDiags := server.ApiTokens.ElementsAs(ctx, &res.APITokens, false)
 	server.ApiTokens, apiTokenDiags = types.ListValueFrom(ctx, server.ApiTokens.ElementType(ctx), res.APITokens)
@@ -224,16 +219,19 @@ func mapServerResourceFromApi(ctx context.Context, server *resource_server.Serve
 		return apiTokenDiags
 	}
 
+	server.Color = types.StringValue(res.Color)
+	server.SmtpApiActivated = types.BoolValue(res.SMTPAPIActivated)
+	server.RawEmailEnabled = types.BoolValue(res.RawEmailEnabled)
 	server.DeliveryType = types.StringValue(res.DeliveryType)
+	server.ServerLink = types.StringValue(res.ServerLink)
 	server.InboundAddress = types.StringValue(res.InboundAddress)
+	server.InboundHookUrl = types.StringValue(res.InboundHookURL)
+	server.PostFirstOpenOnly = types.BoolValue(res.PostFirstOpenOnly)
 	server.InboundDomain = types.StringValue(res.InboundDomain)
 	server.InboundHash = types.StringValue(res.InboundHash)
-	server.InboundHookUrl = types.StringValue(res.InboundHookURL)
 	server.InboundSpamThreshold = types.Int64Value(res.InboundSpamThreshold)
-	server.PostFirstOpenOnly = types.BoolValue(res.PostFirstOpenOnly)
-	server.RawEmailEnabled = types.BoolValue(res.RawEmailEnabled)
-	server.ServerLink = types.StringValue(res.ServerLink)
-	server.SmtpApiActivated = types.BoolValue(res.SMTPAPIActivated)
+	server.TrackOpens = types.BoolValue(res.TrackOpens)
+	server.TrackLinks = types.StringValue(res.TrackLinks)
 	server.IncludeBounceContentInHook = types.BoolValue(res.IncludeBounceContentInHook)
 	server.EnableSmtpApiErrorHooks = types.BoolValue(res.EnableSMTPAPIErrorHooks)
 

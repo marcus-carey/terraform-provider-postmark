@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -69,10 +68,10 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Specifies whether or not SMTP API Errors will be included with bounce webhooks.",
 				Default:             booldefault.StaticBool(false),
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"inbound_address": schema.StringAttribute{
@@ -178,7 +177,7 @@ type ServerModel struct {
 	Color                      types.String `tfsdk:"color"`
 	DeliveryType               types.String `tfsdk:"delivery_type"`
 	EnableSmtpApiErrorHooks    types.Bool   `tfsdk:"enable_smtp_api_error_hooks"`
-	Id                         types.Int64  `tfsdk:"id"`
+	Id                         types.String `tfsdk:"id"`
 	InboundAddress             types.String `tfsdk:"inbound_address"`
 	InboundDomain              types.String `tfsdk:"inbound_domain"`
 	InboundHash                types.String `tfsdk:"inbound_hash"`

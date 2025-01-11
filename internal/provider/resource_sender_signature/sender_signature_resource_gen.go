@@ -4,8 +4,8 @@ package resource_sender_signature
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -53,10 +53,10 @@ func SenderSignatureResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "From email associated with sender signature.",
 				MarkdownDescription: "From email associated with sender signature.",
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
@@ -123,7 +123,7 @@ type SenderSignatureModel struct {
 	Domain                        types.String `tfsdk:"domain"`
 	EmailAddress                  types.String `tfsdk:"email_address"`
 	FromEmail                     types.String `tfsdk:"from_email"`
-	Id                            types.Int64  `tfsdk:"id"`
+	Id                            types.String `tfsdk:"id"`
 	Name                          types.String `tfsdk:"name"`
 	ReplyToEmail                  types.String `tfsdk:"reply_to_email"`
 	ReplyToEmailAddress           types.String `tfsdk:"reply_to_email_address"`

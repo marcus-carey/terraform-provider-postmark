@@ -45,7 +45,7 @@ func SenderSignatureDataSourceSchema(ctx context.Context) schema.Schema {
 			"email_address": schema.StringAttribute{
 				Computed: true,
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Required: true,
 			},
 			"name": schema.StringAttribute{
@@ -99,7 +99,7 @@ type SenderSignatureModel struct {
 	Dkimverified                  types.Bool   `tfsdk:"dkimverified"`
 	Domain                        types.String `tfsdk:"domain"`
 	EmailAddress                  types.String `tfsdk:"email_address"`
-	Id                            types.Int64  `tfsdk:"id"`
+	Id                            types.String `tfsdk:"id"`
 	Name                          types.String `tfsdk:"name"`
 	ReplyToEmailAddress           types.String `tfsdk:"reply_to_email_address"`
 	ReturnPathDomain              types.String `tfsdk:"return_path_domain"`

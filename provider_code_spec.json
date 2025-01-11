@@ -61,7 +61,7 @@
 					},
 					{
 						"name": "id",
-						"int64": {
+						"string": {
 							"computed_optional_required": "required"
 						}
 					},
@@ -201,7 +201,7 @@
 					},
 					{
 						"name": "id",
-						"int64": {
+						"string": {
 							"computed_optional_required": "required"
 						}
 					},
@@ -289,7 +289,7 @@
 					},
 					{
 						"name": "id",
-						"int64": {
+						"string": {
 							"computed_optional_required": "required"
 						}
 					},
@@ -471,17 +471,17 @@
 					},
 					{
 						"name": "id",
-						"int64": {
+						"string": {
 							"computed_optional_required": "computed",
 							"plan_modifiers": [
 								{
 									"custom": {
 										"imports": [
 											{
-												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 											}
 										],
-										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
 									}
 								}
 							]
@@ -639,17 +639,17 @@
 					},
 					{
 						"name": "id",
-						"int64": {
+						"string": {
 							"computed_optional_required": "computed",
 							"plan_modifiers": [
 								{
 									"custom": {
 										"imports": [
 											{
-												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 											}
 										],
-										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
 									}
 								}
 							]
@@ -912,17 +912,17 @@
 					},
 					{
 						"name": "id",
-						"int64": {
+						"string": {
 							"computed_optional_required": "computed",
 							"plan_modifiers": [
 								{
 									"custom": {
 										"imports": [
 											{
-												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 											}
 										],
-										"schema_definition": "int64planmodifier.UseStateForUnknown()"
+										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
 									}
 								}
 							]

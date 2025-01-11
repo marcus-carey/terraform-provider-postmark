@@ -4,8 +4,8 @@ package resource_domain
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -44,10 +44,10 @@ func DomainResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "The ID for the Domain that should be retrieved.",
 				MarkdownDescription: "The ID for the Domain that should be retrieved.",
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
@@ -96,7 +96,7 @@ type DomainModel struct {
 	DkimupdateStatus              types.String `tfsdk:"dkimupdate_status"`
 	Dkimverified                  types.Bool   `tfsdk:"dkimverified"`
 	Domainid                      types.Int64  `tfsdk:"domainid"`
-	Id                            types.Int64  `tfsdk:"id"`
+	Id                            types.String `tfsdk:"id"`
 	Name                          types.String `tfsdk:"name"`
 	ReturnPathDomain              types.String `tfsdk:"return_path_domain"`
 	ReturnPathDomainCnamevalue    types.String `tfsdk:"return_path_domain_cnamevalue"`

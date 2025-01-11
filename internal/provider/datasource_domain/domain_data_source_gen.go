@@ -41,7 +41,7 @@ func DomainDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "The ID for the Domain that should be retrieved.",
 				MarkdownDescription: "The ID for the Domain that should be retrieved.",
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Required: true,
 			},
 			"name": schema.StringAttribute{
@@ -85,7 +85,7 @@ type DomainModel struct {
 	DkimupdateStatus              types.String `tfsdk:"dkimupdate_status"`
 	Dkimverified                  types.Bool   `tfsdk:"dkimverified"`
 	Domainid                      types.Int64  `tfsdk:"domainid"`
-	Id                            types.Int64  `tfsdk:"id"`
+	Id                            types.String `tfsdk:"id"`
 	Name                          types.String `tfsdk:"name"`
 	ReturnPathDomain              types.String `tfsdk:"return_path_domain"`
 	ReturnPathDomainCnamevalue    types.String `tfsdk:"return_path_domain_cnamevalue"`
