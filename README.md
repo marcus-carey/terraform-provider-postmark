@@ -5,7 +5,7 @@ This is a terraform provider for Postmark Account Management such as servers, se
 This provider uses the Postmark API facilitated by the community library [Postmark Golang](https://github.com/mrz1836/postmark) by [Mr. Z](https://github.com/mrz1836).
 
 > [!CAUTION]
-> **It is a work in progress and is not yet ready for production use.** [!CAUTION]
+> **It is a work in progress and is not yet ready for production use.**
 
 ## Developing Locally
 
