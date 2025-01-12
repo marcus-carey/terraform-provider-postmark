@@ -15,6 +15,7 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 			"api_tokens": schema.ListAttribute{
 				ElementType: types.StringType,
 				Computed:    true,
+				Sensitive:   true,
 			},
 			"color": schema.StringAttribute{
 				Computed: true,
@@ -35,7 +36,8 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 				Computed: true,
 			},
 			"inbound_hash": schema.StringAttribute{
-				Computed: true,
+				Computed:  true,
+				Sensitive: true,
 			},
 			"inbound_hook_url": schema.StringAttribute{
 				Computed: true,

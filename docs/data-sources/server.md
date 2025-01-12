@@ -23,14 +23,14 @@ data "postmark_server" "test" {
 
 ### Read-Only
 
-- `api_tokens` (List of String)
+- `api_tokens` (List of String, Sensitive)
 - `color` (String)
 - `delivery_type` (String)
 - `enable_smtp_api_error_hooks` (Boolean)
 - `id` (String) The ID of this resource.
 - `inbound_address` (String)
 - `inbound_domain` (String)
-- `inbound_hash` (String)
+- `inbound_hash` (String, Sensitive)
 - `inbound_hook_url` (String)
 - `inbound_spam_threshold` (Number)
 - `include_bounce_content_in_hook` (Boolean)

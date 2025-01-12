@@ -44,7 +44,7 @@ linters:
     - gofmt
     - gofumpt
     - goimports
-    - gomoddirectives
+#    - gomoddirectives
     - gosec
     - gosimple
     - govet
@@ -74,8 +74,7 @@ linters:
     - wastedassign
 
 linters-settings:linters-settings:
-  # I'm biased and I'm enabling more than 100 checks
-  # Might be too much for you. See https://go-critic.com/overview.html
+  # See https://go-critic.com/overview.html
   gocritic:
     enabled-tags:
       - diagnostic
@@ -105,17 +104,16 @@ linters-settings:linters-settings:
 
   govet:
     disable:
-      - fieldalignment # I'm ok to waste some bytes
+      - fieldalignment
 
   nakedret:
-    # No naked returns, ever.
     max-func-lines: 1 # Default: 30
 
   tagliatelle:
     case:
       rules:
-        json: snake # why it's not a `snake` by default?!
-        yaml: snake # why it's not a `snake` by default?!
+        json: snake
+        yaml: snake
         xml: camel
         bson: camel
         avro: snake

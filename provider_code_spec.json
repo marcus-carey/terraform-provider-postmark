@@ -275,6 +275,7 @@
 					{
 						"name": "api_tokens",
 						"list": {
+							"sensitive": true,
 							"computed_optional_required": "computed",
 							"element_type": {
 								"string": {}
@@ -314,6 +315,7 @@
 					{
 						"name": "inbound_hash",
 						"string": {
+							"sensitive": true,
 							"computed_optional_required": "computed"
 						}
 					},
@@ -914,6 +916,7 @@
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed",
+							"sensitive": true,
 							"plan_modifiers": [
 								{
 									"custom": {
@@ -950,6 +953,7 @@
 						"name": "inbound_hash",
 						"string": {
 							"computed_optional_required": "computed",
+							"sensitive": true,
 							"plan_modifiers": [
 								{
 									"custom": {

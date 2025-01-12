@@ -2,6 +2,7 @@ module terraform-provider-postmark
 
 go 1.23
 
+// TODO - remove once fix is merged
 replace github.com/mrz1836/postmark => /Users/marcuscarey/GolandProjects/postmark
 
 require (

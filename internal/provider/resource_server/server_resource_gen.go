@@ -69,7 +69,8 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Default:             booldefault.StaticBool(false),
 			},
 			"id": schema.StringAttribute{
-				Computed: true,
+				Computed:  true,
+				Sensitive: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -88,7 +89,8 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Default:             stringdefault.StaticString(""),
 			},
 			"inbound_hash": schema.StringAttribute{
-				Computed: true,
+				Computed:  true,
+				Sensitive: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},

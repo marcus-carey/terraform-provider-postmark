@@ -46,9 +46,9 @@ resource "postmark_server" "test" {
 ### Read-Only
 
 - `api_tokens` (List of String)
-- `id` (String) The ID of this resource.
+- `id` (String, Sensitive) The ID of this resource.
 - `inbound_address` (String)
-- `inbound_hash` (String)
+- `inbound_hash` (String, Sensitive)
 - `server_link` (String)
 
 ## Import

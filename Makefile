@@ -18,6 +18,7 @@ default: build
 tools:
 	go install github.com/client9/misspell/cmd/misspell@v0.3.4
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.63.4
+	go install github.com/hashicorp/terraform-plugin-codegen-framework/cmd/tfplugingen-framework@v0.4.1
 
 build: fmtcheck
 	go build ./...
@@ -72,5 +73,10 @@ install: clean
 	mv ${BINARY} ~/.terraform.d/plugins/${PLUGIN_DIR}
 	@echo "▶️ Build executed successfully"
 
-#generate:
-#	go generate ./...
+generate-schema:
+	tfplugingen-framework generate all \
+        --input provider_code_spec.json \
+        --output internal/provider
+
+generate-docs:
+	go generate ./...
