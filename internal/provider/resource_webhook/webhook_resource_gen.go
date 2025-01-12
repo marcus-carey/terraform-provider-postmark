@@ -8,9 +8,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
@@ -132,12 +132,12 @@ func WebhookResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "List of custom headers included.",
 				MarkdownDescription: "List of custom headers included.",
 			},
-			"id": schema.Int64Attribute{
+			"id": schema.StringAttribute{
 				Computed:            true,
 				Description:         "ID of webhook.",
 				MarkdownDescription: "ID of webhook.",
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"message_stream": schema.StringAttribute{
@@ -236,7 +236,7 @@ type WebhookModel struct {
 	DeliveryTrigger           DeliveryTriggerValue           `tfsdk:"delivery_trigger"`
 	HttpAuth                  HttpAuthValue                  `tfsdk:"http_auth"`
 	HttpHeaders               types.List                     `tfsdk:"http_headers"`
-	Id                        types.Int64                    `tfsdk:"id"`
+	Id                        types.String                   `tfsdk:"id"`
 	MessageStream             types.String                   `tfsdk:"message_stream"`
 	OpenTrigger               OpenTriggerValue               `tfsdk:"open_trigger"`
 	ServerApiToken            types.String                   `tfsdk:"server_api_token"`
