@@ -56,27 +56,52 @@ func (d *serverDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 }
 
 func (d *serverDataSource) readFromAPI(ctx context.Context, server *datasource_server.ServerModel) diag.Diagnostics {
-	res, err := d.client.GetServer(ctx, server.Id.ValueString())
-	if err != nil {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
-		return diag.Diagnostics{clientDiag}
+	name := server.Name.ValueString()
+	if server.Id.IsNull() && name == "" {
+		return diag.Diagnostics{diag.NewErrorDiagnostic("Invalid Configuration", "Either the server ID or server name must be set")}
+	}
+
+	res := postmark.Server{}
+
+	if !server.Id.IsNull() {
+
+		server, err := d.client.GetServer(ctx, TypeStringToInt64(server.Id))
+		if err != nil {
+			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
+			return diag.Diagnostics{clientDiag}
+		}
+
+		res = server
+	} else {
+		search, err := d.client.GetServers(ctx, 20, 0, name)
+		if err != nil || len(search.Servers) == 0 {
+			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
+			return diag.Diagnostics{clientDiag}
+		}
+
+		// Find server with name that is exact match
+		for _, s := range search.Servers {
+			if s.Name == name {
+				res = s
+				break
+			}
+		}
+
+		if res.ID == 0 {
+			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, no server found with name: %s", name))
+			return diag.Diagnostics{clientDiag}
+		}
 	}
 
 	server.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
 	server.Name = types.StringValue(res.Name)
 	server.Color = types.StringValue(res.Color)
 
-	apiTokenDiags := server.ApiTokens.ElementsAs(ctx, &res.APITokens, false)
-
-	if apiTokenDiags.HasError() {
-		return apiTokenDiags
+	apiTokens, parseDiags := parseListType(ctx, server.ApiTokens, res.APITokens)
+	if parseDiags.HasError() {
+		return parseDiags
 	}
-
-	server.ApiTokens, apiTokenDiags = types.ListValueFrom(ctx, server.ApiTokens.ElementType(ctx), res.APITokens)
-
-	if apiTokenDiags.HasError() {
-		return apiTokenDiags
-	}
+	server.ApiTokens = apiTokens
 
 	server.DeliveryType = types.StringValue(res.DeliveryType)
 	server.InboundAddress = types.StringValue(res.InboundAddress)

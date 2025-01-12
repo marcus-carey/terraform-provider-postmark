@@ -127,7 +127,7 @@ func (r *serverResource) Delete(ctx context.Context, req resource.DeleteRequest,
 }
 
 func (r *serverResource) readFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	res, err := r.client.GetServer(ctx, server.Id.ValueString())
+	res, err := r.client.GetServer(ctx, TypeStringToInt64(server.Id))
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read server, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
@@ -137,7 +137,21 @@ func (r *serverResource) readFromAPI(ctx context.Context, server *resource_serve
 }
 
 func (r *serverResource) createFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	body := mapServerResourceToAPI(server)
+	body := postmark.ServerCreateRequest{
+		Name:                       server.Name.ValueString(),
+		Color:                      server.Color.ValueString(),
+		SMTPAPIActivated:           server.SmtpApiActivated.ValueBool(),
+		RawEmailEnabled:            server.RawEmailEnabled.ValueBool(),
+		DeliveryType:               server.DeliveryType.ValueString(),
+		InboundHookURL:             server.InboundHookUrl.ValueString(),
+		PostFirstOpenOnly:          server.PostFirstOpenOnly.ValueBool(),
+		InboundDomain:              server.InboundDomain.ValueString(),
+		InboundSpamThreshold:       server.InboundSpamThreshold.ValueInt64(),
+		TrackOpens:                 server.TrackOpens.ValueBool(),
+		TrackLinks:                 server.TrackLinks.ValueString(),
+		IncludeBounceContentInHook: server.IncludeBounceContentInHook.ValueBool(),
+		EnableSMTPAPIErrorHooks:    server.EnableSmtpApiErrorHooks.ValueBool(),
+	}
 	res, err := r.client.CreateServer(ctx, body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create server, got error: %s", err))
@@ -153,12 +167,23 @@ func (r *serverResource) createFromAPI(ctx context.Context, server *resource_ser
 }
 
 func (r *serverResource) updateFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
-	id := server.Id.ValueString()
-	body := mapServerResourceToAPI(server)
-	body.ID, _ = strconv.ParseInt(id, 10, 64)
-	res, err := r.client.EditServer(ctx, id, body)
+	body := postmark.ServerEditRequest{
+		Name:                       server.Name.ValueString(),
+		Color:                      server.Color.ValueString(),
+		SMTPAPIActivated:           server.SmtpApiActivated.ValueBool(),
+		RawEmailEnabled:            server.RawEmailEnabled.ValueBool(),
+		InboundHookURL:             server.InboundHookUrl.ValueString(),
+		PostFirstOpenOnly:          server.PostFirstOpenOnly.ValueBool(),
+		InboundDomain:              server.InboundDomain.ValueString(),
+		InboundSpamThreshold:       server.InboundSpamThreshold.ValueInt64(),
+		TrackOpens:                 server.TrackOpens.ValueBool(),
+		TrackLinks:                 server.TrackLinks.ValueString(),
+		IncludeBounceContentInHook: server.IncludeBounceContentInHook.ValueBool(),
+		EnableSMTPAPIErrorHooks:    server.EnableSmtpApiErrorHooks.ValueBool(),
+	}
+	res, err := r.client.EditServer(ctx, TypeStringToInt64(server.Id), body)
 	if err != nil {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update server %s, got error: %s\nRequest Body:\n%#v", id, err, body))
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update server %s, got error: %s\nRequest Body:\n%#v", server.Id.ValueString(), err, body))
 		return diag.Diagnostics{clientDiag}
 	}
 
@@ -171,39 +196,15 @@ func (r *serverResource) deleteFromAPI() diag.Diagnostics {
 	return diag.Diagnostics{clientDiag}
 }
 
-func mapServerResourceToAPI(server *resource_server.ServerModel) postmark.Server {
-	return postmark.Server{
-		Name:                       server.Name.ValueString(),
-		Color:                      server.Color.ValueString(),
-		SMTPAPIActivated:           server.SmtpApiActivated.ValueBool(),
-		RawEmailEnabled:            server.RawEmailEnabled.ValueBool(),
-		DeliveryType:               server.DeliveryType.ValueString(),
-		InboundHookURL:             server.InboundHookUrl.ValueString(),
-		PostFirstOpenOnly:          server.PostFirstOpenOnly.ValueBool(),
-		InboundDomain:              server.InboundDomain.ValueString(),
-		InboundSpamThreshold:       server.InboundSpamThreshold.ValueInt64(),
-		TrackOpens:                 server.TrackOpens.ValueBool(),
-		TrackLinks:                 server.TrackLinks.ValueString(),
-		IncludeBounceContentInHook: server.IncludeBounceContentInHook.ValueBool(),
-		EnableSMTPAPIErrorHooks:    server.EnableSmtpApiErrorHooks.ValueBool(),
-	}
-}
-
 func mapServerResourceFromAPI(ctx context.Context, server *resource_server.ServerModel, res postmark.Server) diag.Diagnostics {
 	server.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
 	server.Name = types.StringValue(res.Name)
 
-	apiTokenDiags := server.ApiTokens.ElementsAs(ctx, &res.APITokens, false)
-
-	if apiTokenDiags.HasError() {
-		return apiTokenDiags
+	apiTokens, parseDiags := parseListType(ctx, server.ApiTokens, res.APITokens)
+	if parseDiags.HasError() {
+		return parseDiags
 	}
-
-	server.ApiTokens, apiTokenDiags = types.ListValueFrom(ctx, server.ApiTokens.ElementType(ctx), res.APITokens)
-
-	if apiTokenDiags.HasError() {
-		return apiTokenDiags
-	}
+	server.ApiTokens = apiTokens
 
 	server.Color = types.StringValue(res.Color)
 	server.SmtpApiActivated = types.BoolValue(res.SMTPAPIActivated)

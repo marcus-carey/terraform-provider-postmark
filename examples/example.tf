@@ -21,7 +21,10 @@ provider "postmark" {
 
 data "postmark_server" "existing" {
   # This is the ID of an existing server in your Postmark account
-  id = var.existing_server_id
+  # id = var.existing_server_id
+
+  # This is the Name of an existing server in your Postmark account
+  name = "Test"
 }
 
 resource "postmark_server" "test_create" {

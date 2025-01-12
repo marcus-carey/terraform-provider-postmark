@@ -312,7 +312,7 @@
 					{
 						"name": "id",
 						"string": {
-							"computed_optional_required": "required",
+							"computed_optional_required": "computed_optional",
 							"description": "ID of server"
 						}
 					},
@@ -362,7 +362,7 @@
 					{
 						"name": "name",
 						"string": {
-							"computed_optional_required": "computed",
+							"computed_optional_required": "computed_optional",
 							"description": "Server name"
 						}
 					},

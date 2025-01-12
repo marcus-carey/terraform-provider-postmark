@@ -35,7 +35,8 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Specifies whether or not SMTP API Errors will be included with bounce webhooks.",
 			},
 			"id": schema.StringAttribute{
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 				Description:         "ID of server",
 				MarkdownDescription: "ID of server",
 			},
@@ -71,6 +72,7 @@ func ServerDataSourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "Include bounce content in webhook.",
 			},
 			"name": schema.StringAttribute{
+				Optional:            true,
 				Computed:            true,
 				Description:         "Server name",
 				MarkdownDescription: "Server name",
