@@ -53,16 +53,18 @@ func (p *postmarkProvider) Metadata(_ context.Context, _ provider.MetadataReques
 
 func (p *postmarkProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewSenderSignatureDataSource,
 		NewDomainDataSource,
+		NewSenderSignatureDataSource,
 		NewServerDataSource,
+		NewWebhookDataSource,
 	}
 }
 
 func (p *postmarkProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewServerResource,
-		NewSenderSignatureResource,
 		NewDomainResource,
+		NewSenderSignatureResource,
+		NewServerResource,
+		NewWebhookResource,
 	}
 }

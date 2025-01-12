@@ -21,8 +21,11 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 	return schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"api_tokens": schema.ListAttribute{
-				ElementType: types.StringType,
-				Computed:    true,
+				ElementType:         types.StringType,
+				Computed:            true,
+				Sensitive:           true,
+				Description:         "List of API tokens associated with server.",
+				MarkdownDescription: "List of API tokens associated with server.",
 				PlanModifiers: []planmodifier.List{
 					listplanmodifier.UseStateForUnknown(),
 				},
@@ -69,14 +72,17 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Default:             booldefault.StaticBool(false),
 			},
 			"id": schema.StringAttribute{
-				Computed:  true,
-				Sensitive: true,
+				Computed:            true,
+				Description:         "ID of server",
+				MarkdownDescription: "ID of server",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"inbound_address": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "Inbound email address",
+				MarkdownDescription: "Inbound email address",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -89,8 +95,10 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Default:             stringdefault.StaticString(""),
 			},
 			"inbound_hash": schema.StringAttribute{
-				Computed:  true,
-				Sensitive: true,
+				Computed:            true,
+				Sensitive:           true,
+				Description:         "The inbound hash of your inbound email address.",
+				MarkdownDescription: "The inbound hash of your inbound email address.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -136,7 +144,9 @@ func ServerResourceSchema(ctx context.Context) schema.Schema {
 				Default:             booldefault.StaticBool(false),
 			},
 			"server_link": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				Description:         "URL to your server overview page in Postmark.",
+				MarkdownDescription: "URL to your server overview page in Postmark.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},

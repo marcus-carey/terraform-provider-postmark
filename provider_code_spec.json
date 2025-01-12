@@ -5,118 +5,122 @@
 			"schema": {
 				"attributes": [
 					{
-						"name": "domainid",
-						"int64": {
-							"computed_optional_required": "required",
-							"description": "The ID for the Domain that should be retrieved."
-						}
-					},
-					{
-						"name": "dkimhost",
+						"name": "dkim_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT host being used to validate messages sent in."
 						}
 					},
 					{
-						"name": "dkimpending_host",
+						"name": "dkim_pending_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "If a DKIM rotation has been initiated or this DKIM is from a new Domain, this field will show the pending DKIM DNS TXT host which has yet to be setup and confirmed at your registrar or DNS host."
 						}
 					},
 					{
-						"name": "dkimpending_text_value",
+						"name": "dkim_pending_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Similar to the DKIMPendingHost field, this will show the DNS TXT value waiting to be confirmed at your registrar or DNS host."
 						}
 					},
 					{
-						"name": "dkimrevoked_host",
+						"name": "dkim_revoked_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Once a new DKIM has been confirmed at your registrar or DNS host, Postmark will revoke the old DKIM host in preparation for removing it permantly from the system."
 						}
 					},
 					{
-						"name": "dkimrevoked_text_value",
+						"name": "dkim_revoked_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Similar to DKIMRevokedHost, this field will show the DNS TXT value that will soon be removed from the Postmark system."
 						}
 					},
 					{
-						"name": "dkimtest_value",
+						"name": "dkim_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT value being used to validate messages sent in."
 						}
 					},
 					{
-						"name": "dkimupdate_status",
+						"name": "dkim_update_status",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "While DKIM renewal or new DKIM operations are being conducted or setup, this field will indicate Pending. After all DNS TXT records are up to date and any pending renewal operations are finished, it will indicate Verified."
 						}
 					},
 					{
-						"name": "dkimverified",
+						"name": "dkim_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Specifies whether DKIM has ever been verified for the domain or not. Once DKIM is verified, this response will stay true, even if the record is later removed from DNS."
 						}
 					},
 					{
 						"name": "id",
 						"string": {
-							"computed_optional_required": "required"
+							"computed_optional_required": "required",
+							"description": "Unique ID of the Domain."
 						}
 					},
 					{
 						"name": "name",
 						"string": {
-							"computed_optional_required": "required"
+							"computed_optional_required": "computed",
+							"description": "Domain Name"
 						}
 					},
 					{
 						"name": "return_path_domain",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The custom Return-Path for this domain, please read our support page."
 						}
 					},
 					{
-						"name": "return_path_domain_cnamevalue",
+						"name": "return_path_domain_cname_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The CNAME DNS record that Postmark expects to find at the ReturnPathDomain value."
 						}
 					},
 					{
 						"name": "return_path_domain_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The verification state of the Return-Path domain. Tells you if the Return-Path is actively being used or still needs further action to be used."
 						}
 					},
 					{
-						"name": "spfhost",
+						"name": "spf_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Host name used for the SPF configuration."
 						}
 					},
 					{
-						"name": "spftext_value",
+						"name": "spf_text_value",
 						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "spfverified",
-						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Value that can be optionally setup with your DNS host."
 						}
 					},
 					{
 						"name": "safe_to_remove_revoked_key_from_dns",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates whether you may safely delete the old DKIM DNS TXT records at your registrar or DNS host. The new DKIM is now safely in use."
 						}
 					},
 					{
 						"name": "weak_dkim",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DKIM is using a strength weaker than 1024 bit. If so, it’s possible to request a new DKIM using the RequestNewDKIM function."
 						}
 					}
 				]
@@ -127,142 +131,157 @@
 			"schema": {
 				"attributes": [
 					{
-						"name": "signatureid",
-						"int64": {
-							"computed_optional_required": "required",
-							"description": "The ID for the Sender Signature that should be retrieved."
-						}
-					},
-					{
 						"name": "confirmed",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates whether or not this sender signature has been confirmed."
 						}
 					},
 					{
-						"name": "dkimhost",
+						"name": "dkim_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT host being used to validate messages sent in."
 						}
 					},
 					{
-						"name": "dkimpending_host",
+						"name": "dkim_pending_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "If a DKIM rotation has been initiated or this DKIM is from a new Domain, this field will show the pending DKIM DNS TXT host which has yet to be setup and confirmed at your registrar or DNS host."
 						}
 					},
 					{
-						"name": "dkimpending_text_value",
+						"name": "dkim_pending_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Similar to the DKIMPendingHost field, this will show the DNS TXT value waiting to be confirmed at your registrar or DNS host."
 						}
 					},
 					{
-						"name": "dkimrevoked_host",
+						"name": "dkim_revoked_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Once a new DKIM has been confirmed at your registrar or DNS host, Postmark will revoke the old DKIM host in preparation for removing it permantly from the system."
 						}
 					},
 					{
-						"name": "dkimrevoked_text_value",
+						"name": "dkim_revoked_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Similar to DKIMRevokedHost, this field will show the DNS TXT value that will soon be removed from the Postmark system."
 						}
 					},
 					{
-						"name": "dkimtest_value",
+						"name": "dkim_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT value being used to validate messages sent in."
 						}
 					},
 					{
-						"name": "dkimupdate_status",
+						"name": "dkim_update_status",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "While DKIM renewal or new DKIM operations are being conducted or setup, this field will indicate Pending. After all DNS TXT records are up to date and any pending renewal operations are finished, it will indicate Verified."
 						}
 					},
 					{
-						"name": "dkimverified",
+						"name": "dkim_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Specifies whether DKIM has ever been verified for the domain or not. Once DKIM is verified, this response will stay true, even if the record is later removed from DNS."
 						}
 					},
 					{
 						"name": "domain",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Domain associated with sender signature."
 						}
 					},
 					{
 						"name": "email_address",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "From email associated with sender signature."
 						}
 					},
 					{
 						"name": "id",
 						"string": {
-							"computed_optional_required": "required"
+							"computed_optional_required": "required",
+							"description": "Unique ID of sender signature."
 						}
 					},
 					{
 						"name": "name",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "From name of sender signature."
 						}
 					},
 					{
 						"name": "reply_to_email_address",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Reply-To email associated with sender signature."
 						}
 					},
 					{
 						"name": "return_path_domain",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The custom Return-Path for this domain, please read our support page."
 						}
 					},
 					{
-						"name": "return_path_domain_cnamevalue",
+						"name": "return_path_domain_cname_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The CNAME DNS record that Postmark expects to find at the ReturnPathDomain value."
 						}
 					},
 					{
 						"name": "return_path_domain_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The verification state of the Return-Path domain. Tells you if the Return-Path is actively being used or still needs further action to be used."
 						}
 					},
 					{
-						"name": "spfhost",
+						"name": "spf_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Host name used for the SPF configuration."
 						}
 					},
 					{
-						"name": "spftext_value",
+						"name": "spf_text_value",
 						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "spfverified",
-						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Value that can be optionally setup with your DNS host."
 						}
 					},
 					{
 						"name": "safe_to_remove_revoked_key_from_dns",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates whether you may safely delete the old DKIM DNS TXT records at your registrar or DNS host. The new DKIM is now safely in use."
 						}
 					},
 					{
 						"name": "weak_dkim",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DKIM is using a strength weaker than 1024 bit. If so, it’s possible to request a new DKIM using the RequestNewDKIM function."
+						}
+					},
+					{
+						"name": "confirmation_personal_note",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The text of the personal note sent to the recipient."
 						}
 					}
 				]
@@ -276,6 +295,7 @@
 						"name": "api_tokens",
 						"list": {
 							"sensitive": true,
+							"description": "List of API tokens associated with server.",
 							"computed_optional_required": "computed",
 							"element_type": {
 								"string": {}
@@ -285,30 +305,35 @@
 					{
 						"name": "color",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Color of the server in the server list, for quick identification. Possible values - 'purple', 'blue', 'turquoise', 'green', 'red', 'yellow', 'grey', 'orange'"
 						}
 					},
 					{
 						"name": "id",
 						"string": {
-							"computed_optional_required": "required"
+							"computed_optional_required": "required",
+							"description": "ID of server"
 						}
 					},
 					{
 						"name": "delivery_type",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Specifies the type of environment for your server. Possible options - Live Sandbox. Defaults to Live if not specified. This cannot be changed after the server has been created."
 						}
 					},
 					{
 						"name": "inbound_address",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Inbound email address"
 						}
 					},
 					{
 						"name": "inbound_domain",
 						"string": {
+							"description": "Inbound domain for MX setup.",
 							"computed_optional_required": "computed"
 						}
 					},
@@ -316,37 +341,43 @@
 						"name": "inbound_hash",
 						"string": {
 							"sensitive": true,
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The inbound hash of your inbound email address."
 						}
 					},
 					{
 						"name": "inbound_hook_url",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "URL to POST to every time an inbound event occurs."
 						}
 					},
 					{
 						"name": "inbound_spam_threshold",
 						"int64": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The maximum spam score for an inbound message before it's blocked."
 						}
 					},
 					{
 						"name": "name",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Server name"
 						}
 					},
 					{
 						"name": "post_first_open_only",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook."
 						}
 					},
 					{
 						"name": "raw_email_enabled",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "When enabled, the raw email content will be included with inbound webhook payloads under the RawEmail key."
 						}
 					},
 					{
@@ -358,31 +389,230 @@
 					{
 						"name": "smtp_api_activated",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Specifies whether or not SMTP is enabled on this server."
 						}
 					},
 					{
 						"name": "track_links",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates if all emails being sent through this server should have link tracking enabled for links in their HTML or Text bodies. Possible options - 'None', 'HtmlAndText', 'HtmlOnly', 'TextOnly'"
 						}
 					},
 					{
 						"name": "track_opens",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates if all emails being sent through this server have open tracking enabled."
 						}
 					},
 					{
 						"name": "include_bounce_content_in_hook",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Include bounce content in webhook."
 						}
 					},
 					{
 						"name": "enable_smtp_api_error_hooks",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Specifies whether or not SMTP API Errors will be included with bounce webhooks."
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "webhook",
+			"schema": {
+				"attributes": [
+					{
+						"name": "url",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Your webhook URL."
+						}
+					},
+					{
+						"name": "message_stream",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The stream this webhook is associated with. If no MessageStream is provided, the default transactional stream outbound will be used."
+						}
+					},
+					{
+						"name": "http_auth",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Optional HTTP Auth credentials for the webhook.",
+							"attributes": [
+								{
+									"name": "username",
+									"string": {
+										"computed_optional_required": "computed",
+										"description": "If present, HTTP Auth username."
+									}
+								},
+								{
+									"name": "password",
+									"string": {
+										"computed_optional_required": "computed",
+										"description": "If present, HTTP Auth password.",
+										"sensitive": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "http_headers",
+						"list_nested": {
+							"computed_optional_required": "computed",
+							"description": "List of custom headers included.",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Name of HTTP header."
+										}
+									},
+									{
+										"name": "value",
+										"string": {
+											"computed_optional_required": "computed",
+											"description": "Value of HTTP header."
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "open_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Open trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not open webhook is enabled."
+									}
+								},
+								{
+									"name": "post_first_open_only",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "If enabled, open webhook will only POST on first open."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "click_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Click trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not click webhook is enabled."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "delivery_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Delivery trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not delivery webhook is enabled."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "bounce_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Bounce trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not bounce webhook is enabled."
+									}
+								},
+								{
+									"name": "include_content",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not the full content of the email bounce is included in webhook POST."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "spam_complaint_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Spam complaint trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not spam complaint webhook is enabled."
+									}
+								},
+								{
+									"name": "include_content",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not the full content of the spam complaint is included in webhook POST."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "subscription_change_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"description": "Subscription change trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "computed",
+										"description": "Specifies whether or not subscription change webhook is enabled."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "required",
+							"description": "ID of webhook."
 						}
 					}
 				]
@@ -424,57 +654,66 @@
 						}
 					},
 					{
-						"name": "dkimhost",
+						"name": "dkim_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT host being used to validate messages sent in."
 						}
 					},
 					{
-						"name": "dkimpending_host",
+						"name": "dkim_pending_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "If a DKIM rotation has been initiated or this DKIM is from a new Domain, this field will show the pending DKIM DNS TXT host which has yet to be setup and confirmed at your registrar or DNS host."
 						}
 					},
 					{
-						"name": "dkimpending_text_value",
+						"name": "dkim_pending_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Similar to the DKIMPendingHost field, this will show the DNS TXT value waiting to be confirmed at your registrar or DNS host."
 						}
 					},
 					{
-						"name": "dkimrevoked_host",
+						"name": "dkim_revoked_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Once a new DKIM has been confirmed at your registrar or DNS host, Postmark will revoke the old DKIM host in preparation for removing it permanently from the system."
 						}
 					},
 					{
-						"name": "dkimrevoked_text_value",
+						"name": "dkim_revoked_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Similar to DKIMRevokedHost, this field will show the DNS TXT value that will soon be removed from the Postmark system."
 						}
 					},
 					{
-						"name": "dkimtest_value",
+						"name": "dkim_text_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT host being used to validate messages sent in."
 						}
 					},
 					{
-						"name": "dkimupdate_status",
+						"name": "dkim_update_status",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "While DKIM renewal or new DKIM operations are being conducted or setup, this field will indicate Pending. After all DNS TXT records are up to date and any pending renewal operations are finished, it will indicate Verified."
 						}
 					},
 					{
-						"name": "dkimverified",
+						"name": "dkim_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Specifies whether DKIM has ever been verified for the domain or not. Once DKIM is verified, this response will stay true, even if the record is later removed from DNS."
 						}
 					},
 					{
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed",
+							"description": "Unique ID of the Domain.",
 							"plan_modifiers": [
 								{
 									"custom": {
@@ -490,52 +729,45 @@
 						}
 					},
 					{
-						"name": "return_path_domain_cnamevalue",
+						"name": "return_path_domain_cname_value",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The CNAME DNS record that Postmark expects to find at the ReturnPathDomain value."
 						}
 					},
 					{
 						"name": "return_path_domain_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The verification state of the Return-Path domain. Tells you if the Return-Path is actively being used or still needs further action to be used."
 						}
 					},
 					{
-						"name": "spfhost",
+						"name": "spf_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Host name used for the SPF configuration."
 						}
 					},
 					{
-						"name": "spftext_value",
+						"name": "spf_text_value",
 						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "spfverified",
-						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Value that can be optionally setup with your DNS host. See our blog post to learn why this field is no longer necessary."
 						}
 					},
 					{
 						"name": "safe_to_remove_revoked_key_from_dns",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates whether you may safely delete the old DKIM DNS TXT records at your registrar or DNS host. The new DKIM is now safely in use."
 						}
 					},
 					{
 						"name": "weak_dkim",
 						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "domainid",
-						"int64": {
-							"computed_optional_required": "computed_optional",
-							"description": "The ID for the Domain that should be retrieved."
+							"computed_optional_required": "computed",
+							"description": "DKIM is using a strength weaker than 1024 bit. If so, it’s possible to request a new DKIM using the RequestNewDKIM function below."
 						}
 					}
 				]
@@ -546,103 +778,45 @@
 			"schema": {
 				"attributes": [
 					{
-						"name": "from_email",
+						"name": "name",
 						"string": {
-							"computed_optional_required": "computed_optional",
+							"computed_optional_required": "required",
+							"description": "From name of sender signature."
+						}
+					},
+					{
+						"name": "email_address",
+						"string": {
+							"computed_optional_required": "required",
 							"description": "From email associated with sender signature."
 						}
 					},
 					{
-						"name": "name",
-						"string": {
-							"computed_optional_required": "required",
-							"description": "From name associated with sender signature."
-						}
-					},
-					{
-						"name": "reply_to_email",
+						"name": "reply_to_email_address",
 						"string": {
 							"computed_optional_required": "computed_optional",
-							"description": "Override for reply-to address."
+							"description": "Reply-To email associated with sender signature."
 						}
 					},
 					{
 						"name": "return_path_domain",
 						"string": {
 							"computed_optional_required": "computed_optional",
-							"description": "A custom value for the Return-Path domain. It is an optional field, but it must be a subdomain of your From Email domain and must have a CNAME record that points to pm.mtasv.net."
+							"description": "A custom value for the Return-Path domain. It is an optional field, but it must be a subdomain of your From Email domain and must have a CNAME record that points to pm.mtasv.net"
 						}
 					},
 					{
-						"name": "confirmed",
-						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimhost",
+						"name": "confirmation_personal_note",
 						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimpending_host",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimpending_text_value",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimrevoked_host",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimrevoked_text_value",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimtest_value",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimupdate_status",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "dkimverified",
-						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "domain",
-						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "email_address",
-						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed_optional",
+							"description": "Optional. A way to provide a note to the recipient of the confirmation email to have context of what Postmark is. Max length of 400 characters."
 						}
 					},
 					{
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed",
+							"description": "Unique ID of sender signature.",
 							"plan_modifiers": [
 								{
 									"custom": {
@@ -658,58 +832,115 @@
 						}
 					},
 					{
-						"name": "reply_to_email_address",
-						"string": {
-							"computed_optional_required": "computed"
+						"name": "confirmed",
+						"bool": {
+							"computed_optional_required": "computed",
+							"description": "Indicates whether or not this sender signature has been confirmed."
 						}
 					},
 					{
-						"name": "return_path_domain_cnamevalue",
+						"name": "dkim_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "DNS TXT host being used to validate messages sent in."
+						}
+					},
+					{
+						"name": "dkim_pending_host",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "If a DKIM rotation has been initiated or this DKIM is from a new Domain, this field will show the pending DKIM DNS TXT host which has yet to be setup and confirmed at your registrar or DNS host."
+						}
+					},
+					{
+						"name": "dkim_pending_text_value",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Similar to the DKIMPendingHost field, this will show the DNS TXT value waiting to be confirmed at your registrar or DNS host."
+						}
+					},
+					{
+						"name": "dkim_revoked_host",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Once a new DKIM has been confirmed at your registrar or DNS host, Postmark will revoke the old DKIM host in preparation for removing it permantly from the system."
+						}
+					},
+					{
+						"name": "dkim_revoked_text_value",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Similar to DKIMRevokedHost, this field will show the DNS TXT value that will soon be removed from the Postmark system."
+						}
+					},
+					{
+						"name": "dkim_text_value",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "DNS TXT value being used to validate messages sent in."
+						}
+					},
+					{
+						"name": "dkim_update_status",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "While DKIM renewal or new DKIM operations are being conducted or setup, this field will indicate Pending. After all DNS TXT records are up to date and any pending renewal operations are finished, it will indicate Verified."
+						}
+					},
+					{
+						"name": "dkim_verified",
+						"bool": {
+							"computed_optional_required": "computed",
+							"description": "Specifies whether DKIM has ever been verified for the domain or not. Once DKIM is verified, this response will stay true, even if the record is later removed from DNS."
+						}
+					},
+					{
+						"name": "domain",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Domain associated with sender signature."
+						}
+					},
+					{
+						"name": "return_path_domain_cname_value",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "The CNAME DNS record that Postmark expects to find at the ReturnPathDomain value."
 						}
 					},
 					{
 						"name": "return_path_domain_verified",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "The verification state of the Return-Path domain. Tells you if the Return-Path is actively being used or still needs further action to be used."
 						}
 					},
 					{
-						"name": "spfhost",
+						"name": "spf_host",
 						"string": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Host name used for the SPF configuration."
 						}
 					},
 					{
-						"name": "spftext_value",
+						"name": "spf_text_value",
 						"string": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "spfverified",
-						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Value that can be optionally setup with your DNS host."
 						}
 					},
 					{
 						"name": "safe_to_remove_revoked_key_from_dns",
 						"bool": {
-							"computed_optional_required": "computed"
+							"computed_optional_required": "computed",
+							"description": "Indicates whether you may safely delete the old DKIM DNS TXT records at your registrar or DNS host. The new DKIM is now safely in use."
 						}
 					},
 					{
 						"name": "weak_dkim",
 						"bool": {
-							"computed_optional_required": "computed"
-						}
-					},
-					{
-						"name": "signatureid",
-						"int64": {
-							"computed_optional_required": "computed_optional",
-							"description": "The ID for the Sender Signature that should be retrieved."
+							"computed_optional_required": "computed",
+							"description": "DKIM is using a strength weaker than 1024 bit. If so, it’s possible to request a new DKIM using the RequestNewDKIM function."
 						}
 					}
 				]
@@ -895,6 +1126,8 @@
 						"name": "api_tokens",
 						"list": {
 							"computed_optional_required": "computed",
+							"sensitive": true,
+							"description": "List of API tokens associated with server.",
 							"element_type": {
 								"string": {}
 							},
@@ -916,7 +1149,7 @@
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed",
-							"sensitive": true,
+							"description": "ID of server",
 							"plan_modifiers": [
 								{
 									"custom": {
@@ -935,6 +1168,7 @@
 						"name": "inbound_address",
 						"string": {
 							"computed_optional_required": "computed",
+							"description": "Inbound email address",
 							"plan_modifiers": [
 								{
 									"custom": {
@@ -953,6 +1187,7 @@
 						"name": "inbound_hash",
 						"string": {
 							"computed_optional_required": "computed",
+							"description": "The inbound hash of your inbound email address.",
 							"sensitive": true,
 							"plan_modifiers": [
 								{
@@ -972,6 +1207,7 @@
 						"name": "server_link",
 						"string": {
 							"computed_optional_required": "computed",
+							"description": "URL to your server overview page in Postmark.",
 							"plan_modifiers": [
 								{
 									"custom": {
@@ -981,6 +1217,224 @@
 											}
 										],
 										"schema_definition": "stringplanmodifier.UseStateForUnknown()"
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "webhook",
+			"schema": {
+				"attributes": [
+					{
+						"name": "url",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Your webhook URL."
+						}
+					},
+					{
+						"name": "message_stream",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The stream this webhook is associated with. If no MessageStream is provided, the default transactional stream outbound will be used.",
+							"default": {
+								"static": "outbound"
+							}
+						}
+					},
+					{
+						"name": "http_auth",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Optional HTTP Auth credentials for the webhook.",
+							"attributes": [
+								{
+									"name": "username",
+									"string": {
+										"computed_optional_required": "required",
+										"description": "If present, HTTP Auth username."
+									}
+								},
+								{
+									"name": "password",
+									"string": {
+										"computed_optional_required": "required",
+										"description": "If present, HTTP Auth password.",
+										"sensitive": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "http_headers",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "List of custom headers included.",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "Name of HTTP header."
+										}
+									},
+									{
+										"name": "value",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "Value of HTTP header."
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "open_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Open trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "required",
+										"description": "Specifies whether or not open webhook is enabled."
+									}
+								},
+								{
+									"name": "post_first_open_only",
+									"bool": {
+										"computed_optional_required": "computed_optional",
+										"description": "If enabled, open webhook will only POST on first open.",
+										"default": {
+											"static": false
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "click_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Click trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "required",
+										"description": "Specifies whether or not click webhook is enabled."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "delivery_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Delivery trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "required",
+										"description": "Specifies whether or not delivery webhook is enabled."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "bounce_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Bounce trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "required",
+										"description": "Specifies whether or not bounce webhook is enabled."
+									}
+								},
+								{
+									"name": "include_content",
+									"bool": {
+										"computed_optional_required": "computed_optional",
+										"description": "Specifies whether or not the full content of the email bounce is included in webhook POST.",
+										"default": {
+											"static": false
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "spam_complaint_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Spam complaint trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "required",
+										"description": "Specifies whether or not spam complaint webhook is enabled."
+									}
+								},
+								{
+									"name": "include_content",
+									"bool": {
+										"computed_optional_required": "computed_optional",
+										"description": "Specifies whether or not the full content of the spam complaint is included in webhook POST.",
+										"default": {
+											"static": false
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "subscription_change_trigger",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"description": "Subscription change trigger settings.",
+							"attributes": [
+								{
+									"name": "enabled",
+									"bool": {
+										"computed_optional_required": "required",
+										"description": "Specifies whether or not subscription change webhook is enabled."
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id",
+						"int64": {
+							"computed_optional_required": "computed",
+							"description": "ID of webhook.",
+							"plan_modifiers": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+											}
+										],
+										"schema_definition": "int64planmodifier.UseStateForUnknown()"
 									}
 								}
 							]
