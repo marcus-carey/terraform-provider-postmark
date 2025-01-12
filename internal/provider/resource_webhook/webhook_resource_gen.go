@@ -172,6 +172,12 @@ func WebhookResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "Open trigger settings.",
 				MarkdownDescription: "Open trigger settings.",
 			},
+			"server_api_token": schema.StringAttribute{
+				Required:            true,
+				Sensitive:           true,
+				Description:         "The Server API token to use for API requests.",
+				MarkdownDescription: "The Server API token to use for API requests.",
+			},
 			"spam_complaint_trigger": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
 					"enabled": schema.BoolAttribute{
@@ -233,6 +239,7 @@ type WebhookModel struct {
 	Id                        types.Int64                    `tfsdk:"id"`
 	MessageStream             types.String                   `tfsdk:"message_stream"`
 	OpenTrigger               OpenTriggerValue               `tfsdk:"open_trigger"`
+	ServerApiToken            types.String                   `tfsdk:"server_api_token"`
 	SpamComplaintTrigger      SpamComplaintTriggerValue      `tfsdk:"spam_complaint_trigger"`
 	SubscriptionChangeTrigger SubscriptionChangeTriggerValue `tfsdk:"subscription_change_trigger"`
 	Url                       types.String                   `tfsdk:"url"`

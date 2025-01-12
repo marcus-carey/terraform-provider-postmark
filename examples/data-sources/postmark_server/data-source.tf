@@ -1,3 +1,3 @@
-data "postmark_server" "test" {
-  id = 15125924
+data "postmark_server" "example" {
+  id = 1111111
 }

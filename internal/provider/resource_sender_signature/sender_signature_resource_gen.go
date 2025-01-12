@@ -88,7 +88,7 @@ func SenderSignatureResourceSchema(ctx context.Context) schema.Schema {
 				Description:         "From name of sender signature.",
 				MarkdownDescription: "From name of sender signature.",
 			},
-			"reply_to_email_address": schema.StringAttribute{
+			"reply_to_email": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
 				Description:         "Reply-To email associated with sender signature.",
@@ -149,7 +149,7 @@ type SenderSignatureModel struct {
 	EmailAddress                  types.String `tfsdk:"email_address"`
 	Id                            types.String `tfsdk:"id"`
 	Name                          types.String `tfsdk:"name"`
-	ReplyToEmailAddress           types.String `tfsdk:"reply_to_email_address"`
+	ReplyToEmail                  types.String `tfsdk:"reply_to_email"`
 	ReturnPathDomain              types.String `tfsdk:"return_path_domain"`
 	ReturnPathDomainCnameValue    types.String `tfsdk:"return_path_domain_cname_value"`
 	ReturnPathDomainVerified      types.Bool   `tfsdk:"return_path_domain_verified"`

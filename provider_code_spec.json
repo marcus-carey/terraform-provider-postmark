@@ -222,7 +222,7 @@
 						}
 					},
 					{
-						"name": "reply_to_email_address",
+						"name": "reply_to_email",
 						"string": {
 							"computed_optional_required": "computed",
 							"description": "Reply-To email associated with sender signature."
@@ -428,6 +428,14 @@
 			"name": "webhook",
 			"schema": {
 				"attributes": [
+					{
+						"name": "server_api_token",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The Server API token to use for API requests.",
+							"sensitive": true
+						}
+					},
 					{
 						"name": "url",
 						"string": {
@@ -792,7 +800,7 @@
 						}
 					},
 					{
-						"name": "reply_to_email_address",
+						"name": "reply_to_email",
 						"string": {
 							"computed_optional_required": "computed_optional",
 							"description": "Reply-To email associated with sender signature."
@@ -1229,6 +1237,14 @@
 			"name": "webhook",
 			"schema": {
 				"attributes": [
+					{
+						"name": "server_api_token",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The Server API token to use for API requests.",
+							"sensitive": true
+						}
+					},
 					{
 						"name": "url",
 						"string": {
