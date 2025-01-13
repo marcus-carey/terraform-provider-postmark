@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"terraform-provider-postmark/internal/provider/resource_sender_signature"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -59,9 +61,6 @@ func (r *senderSignatureResource) Create(ctx context.Context, req resource.Creat
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	// Example data value setting
-	data.Id = types.StringValue("example-id")
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -123,58 +122,87 @@ func (r *senderSignatureResource) Delete(ctx context.Context, req resource.Delet
 	resp.Diagnostics.Append(r.deleteFromAPI(ctx, &data)...)
 }
 
-func (r *senderSignatureResource) readFromAPI(_ context.Context, _ *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	/*res, err := r.client.GetSenderSignature(ctx, senderSignature.Id.ValueString())
+func (r *senderSignatureResource) readFromAPI(ctx context.Context, senderSignature *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
+	res, err := r.client.GetSenderSignature(ctx, TypeStringToInt64(senderSignature.Id))
 	if err != nil {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read senderSignature, got error: %s", err))
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read sender signature, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
 	}
 
-	return mapSenderSignatureResourceFromAPI(ctx, senderSignature, res)*/
+	return mapSenderSignatureResourceFromAPI(ctx, senderSignature, res)
 }
 
-func (r *senderSignatureResource) createFromAPI(_ context.Context, _ *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	/*body := mapSenderSignatureResourceToAPI(senderSignature)
+func (r *senderSignatureResource) createFromAPI(ctx context.Context, senderSignature *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
+	body := postmark.SenderSignatureCreateRequest{
+		FromEmail:                senderSignature.FromEmail.ValueString(),
+		Name:                     senderSignature.Name.ValueString(),
+		ReplyToEmail:             senderSignature.ReplyToEmail.ValueString(),
+		ReturnPathDomain:         senderSignature.ReturnPathDomain.ValueString(),
+		ConfirmationPersonalNote: senderSignature.ConfirmationPersonalNote.ValueString(),
+	}
 	res, err := r.client.CreateSenderSignature(ctx, body)
 	if err != nil {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create senderSignature, got error: %s", err))
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create sender signature, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
 	}
 
 	if res.ID == 0 {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", "Unable to create senderSignature, got error: SenderSignature ID is 0.")
+		clientDiag := diag.NewErrorDiagnostic("Client Error", "Unable to create sender signature, got error: SenderSignature ID is 0.")
 		return diag.Diagnostics{clientDiag}
 	}
 
-	return mapSenderSignatureResourceFromAPI(ctx, senderSignature, res)*/
+	return mapSenderSignatureResourceFromAPI(ctx, senderSignature, res)
 }
 
-func (r *senderSignatureResource) updateFromAPI(_ context.Context, _ *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	/*id := senderSignature.Id.ValueString()
-	body := mapSenderSignatureResourceToAPI(senderSignature)
-	body.ID, _ = strconv.ParseInt(id, 10, 64)
-	res, err := r.client.EditSenderSignature(ctx, id, body)
+func (r *senderSignatureResource) updateFromAPI(ctx context.Context, senderSignature *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
+	body := postmark.SenderSignatureEditRequest{
+		Name:                     senderSignature.Name.ValueString(),
+		ReplyToEmail:             senderSignature.ReplyToEmail.ValueString(),
+		ReturnPathDomain:         senderSignature.ReturnPathDomain.ValueString(),
+		ConfirmationPersonalNote: senderSignature.ConfirmationPersonalNote.ValueString(),
+	}
+	res, err := r.client.EditSenderSignature(ctx, TypeStringToInt64(senderSignature.Id), body)
 	if err != nil {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update senderSignature %s, got error: %s\nRequest Body:\n%#v", id, err, body))
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update sender signature %s, got error: %s\nRequest Body:\n%#v", senderSignature.Id.ValueString(), err, body))
 		return diag.Diagnostics{clientDiag}
 	}
 
-	return mapSenderSignatureResourceFromAPI(ctx, senderSignature, res)*/
+	return mapSenderSignatureResourceFromAPI(ctx, senderSignature, res)
 }
 
-func (r *senderSignatureResource) deleteFromAPI(_ context.Context, _ *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-}
+func (r *senderSignatureResource) deleteFromAPI(ctx context.Context, sender *resource_sender_signature.SenderSignatureModel) diag.Diagnostics {
+	err := r.client.DeleteSenderSignature(ctx, TypeStringToInt64(sender.Id))
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to delete sender signature %s, got error: %s", sender.Id.ValueString(), err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-/*func mapSenderSignatureResourceToAPI(senderSignature *resource_sender_signature.SenderSignatureModel) postmark.SenderSignature {
-	//return postmark.SenderSignature{
-	//	Name:                       senderSignature.Name.ValueString(),
-	//}
-}
-
-func mapSenderSignatureResourceFromAPI(ctx context.Context, senderSignature *resource_sender_signature.SenderSignatureModel, res postmark.SenderSignature) diag.Diagnostics {
 	return nil
-}*/
+}
+
+func mapSenderSignatureResourceFromAPI(_ context.Context, sender *resource_sender_signature.SenderSignatureModel, res postmark.SenderSignatureDetails) diag.Diagnostics {
+	sender.Id = types.StringValue(strconv.Itoa(int(res.ID)))
+	sender.Domain = types.StringValue(res.Domain)
+	sender.Name = types.StringValue(res.Name)
+	sender.FromEmail = types.StringValue(res.FromEmail)
+	sender.ReplyToEmail = types.StringValue(res.ReplyToEmail)
+	sender.Confirmed = types.BoolValue(res.Confirmed)
+	sender.SpfHost = types.StringValue(res.SPFHost)
+	sender.SpfTextValue = types.StringValue(res.SPFTextValue)
+	sender.DkimVerified = types.BoolValue(res.DKIMVerified)
+	sender.WeakDkim = types.BoolValue(res.WeakDKIM)
+	sender.DkimHost = types.StringValue(res.DKIMHost)
+	sender.DkimTextValue = types.StringValue(res.DKIMTextValue)
+	sender.DkimPendingHost = types.StringValue(res.DKIMPendingHost)
+	sender.DkimPendingTextValue = types.StringValue(res.DKIMPendingTextValue)
+	sender.DkimRevokedHost = types.StringValue(res.DKIMRevokedHost)
+	sender.DkimRevokedTextValue = types.StringValue(res.DKIMRevokedTextValue)
+	sender.SafeToRemoveRevokedKeyFromDns = types.BoolValue(res.SafeToRemoveRevokedKeyFromDNS)
+	sender.DkimUpdateStatus = types.StringValue(res.DKIMUpdateStatus)
+	sender.ReturnPathDomain = types.StringValue(res.ReturnPathDomain)
+	sender.ReturnPathDomainVerified = types.BoolValue(res.ReturnPathDomainVerified)
+	sender.ReturnPathDomainCnameValue = types.StringValue(res.ReturnPathDomainCNAMEValue)
+	sender.ConfirmationPersonalNote = types.StringValue(res.ConfirmationPersonalNote)
+
+	return nil
+}

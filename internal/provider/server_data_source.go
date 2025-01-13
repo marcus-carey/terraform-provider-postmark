@@ -103,16 +103,19 @@ func (d *serverDataSource) readFromAPI(ctx context.Context, server *datasource_s
 	}
 	server.ApiTokens = apiTokens
 
+	server.Color = types.StringValue(res.Color)
+	server.SmtpApiActivated = types.BoolValue(res.SMTPAPIActivated)
+	server.RawEmailEnabled = types.BoolValue(res.RawEmailEnabled)
 	server.DeliveryType = types.StringValue(res.DeliveryType)
+	server.ServerLink = types.StringValue(res.ServerLink)
 	server.InboundAddress = types.StringValue(res.InboundAddress)
+	server.InboundHookUrl = types.StringValue(res.InboundHookURL)
+	server.PostFirstOpenOnly = types.BoolValue(res.PostFirstOpenOnly)
 	server.InboundDomain = types.StringValue(res.InboundDomain)
 	server.InboundHash = types.StringValue(res.InboundHash)
-	server.InboundHookUrl = types.StringValue(res.InboundHookURL)
 	server.InboundSpamThreshold = types.Int64Value(res.InboundSpamThreshold)
-	server.PostFirstOpenOnly = types.BoolValue(res.PostFirstOpenOnly)
-	server.RawEmailEnabled = types.BoolValue(res.RawEmailEnabled)
-	server.ServerLink = types.StringValue(res.ServerLink)
-	server.SmtpApiActivated = types.BoolValue(res.SMTPAPIActivated)
+	server.TrackOpens = types.BoolValue(res.TrackOpens)
+	server.TrackLinks = types.StringValue(res.TrackLinks)
 	server.IncludeBounceContentInHook = types.BoolValue(res.IncludeBounceContentInHook)
 	server.EnableSmtpApiErrorHooks = types.BoolValue(res.EnableSMTPAPIErrorHooks)
 

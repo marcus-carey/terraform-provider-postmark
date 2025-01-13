@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"terraform-provider-postmark/internal/provider/datasource_sender_signature"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -49,23 +51,39 @@ func (d *senderSignatureDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	// Example data value setting
-	data.Id = types.StringValue("example-id")
-
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *senderSignatureDataSource) readFromAPI(_ context.Context, _ *datasource_sender_signature.SenderSignatureModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	// TODO - Implement the API call to read the sender signature
-	/*	res, err := d.client.GetSenderSignature(ctx, sender.Id.ValueString())
-		if err != nil {
-			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read domain, got error: %s", err))
-			return diag.Diagnostics{clientDiag}
-		}
+func (d *senderSignatureDataSource) readFromAPI(ctx context.Context, sender *datasource_sender_signature.SenderSignatureModel) diag.Diagnostics {
+	res, err := d.client.GetSenderSignature(ctx, TypeStringToInt64(sender.Id))
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read sender signature, got error: %s", err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-		// TODO - Implement the API response to the model
+	// Set the data
+	sender.Id = types.StringValue(strconv.Itoa(int(res.ID)))
+	sender.Name = types.StringValue(res.Name)
+	sender.FromEmail = types.StringValue(res.FromEmail)
+	sender.ReplyToEmail = types.StringValue(res.ReplyToEmail)
+	sender.Confirmed = types.BoolValue(res.Confirmed)
+	sender.SpfHost = types.StringValue(res.SPFHost)
+	sender.SpfTextValue = types.StringValue(res.SPFTextValue)
+	sender.DkimVerified = types.BoolValue(res.DKIMVerified)
+	sender.WeakDkim = types.BoolValue(res.WeakDKIM)
+	sender.DkimHost = types.StringValue(res.DKIMHost)
+	sender.DkimTextValue = types.StringValue(res.DKIMTextValue)
+	sender.DkimPendingHost = types.StringValue(res.DKIMPendingHost)
+	sender.DkimPendingTextValue = types.StringValue(res.DKIMPendingTextValue)
+	sender.DkimRevokedHost = types.StringValue(res.DKIMRevokedHost)
+	sender.DkimRevokedTextValue = types.StringValue(res.DKIMRevokedTextValue)
+	sender.SafeToRemoveRevokedKeyFromDns = types.BoolValue(res.SafeToRemoveRevokedKeyFromDNS)
+	sender.DkimUpdateStatus = types.StringValue(res.DKIMUpdateStatus)
+	sender.ReturnPathDomain = types.StringValue(res.ReturnPathDomain)
+	sender.ReturnPathDomainVerified = types.BoolValue(res.ReturnPathDomainVerified)
+	sender.ReturnPathDomainCnameValue = types.StringValue(res.ReturnPathDomainCNAMEValue)
+	sender.ConfirmationPersonalNote = types.StringValue(res.ConfirmationPersonalNote)
 
-		return nil*/
+	return nil
 }

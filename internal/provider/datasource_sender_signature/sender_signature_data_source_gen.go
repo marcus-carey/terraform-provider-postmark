@@ -67,7 +67,7 @@ func SenderSignatureDataSourceSchema(ctx context.Context) schema.Schema {
 				Description:         "Domain associated with sender signature.",
 				MarkdownDescription: "Domain associated with sender signature.",
 			},
-			"email_address": schema.StringAttribute{
+			"from_email": schema.StringAttribute{
 				Computed:            true,
 				Description:         "From email associated with sender signature.",
 				MarkdownDescription: "From email associated with sender signature.",
@@ -138,7 +138,7 @@ type SenderSignatureModel struct {
 	DkimUpdateStatus              types.String `tfsdk:"dkim_update_status"`
 	DkimVerified                  types.Bool   `tfsdk:"dkim_verified"`
 	Domain                        types.String `tfsdk:"domain"`
-	EmailAddress                  types.String `tfsdk:"email_address"`
+	FromEmail                     types.String `tfsdk:"from_email"`
 	Id                            types.String `tfsdk:"id"`
 	Name                          types.String `tfsdk:"name"`
 	ReplyToEmail                  types.String `tfsdk:"reply_to_email"`

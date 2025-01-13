@@ -119,7 +119,7 @@ func (r *serverResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	}
 
 	// Delete API call logic
-	resp.Diagnostics.Append(r.deleteFromAPI()...)
+	resp.Diagnostics.Append(r.deleteFromAPI(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -183,17 +183,21 @@ func (r *serverResource) updateFromAPI(ctx context.Context, server *resource_ser
 	}
 	res, err := r.client.EditServer(ctx, TypeStringToInt64(server.Id), body)
 	if err != nil {
-		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update server %s, got error: %s\nRequest Body:\n%#v", server.Id.ValueString(), err, body))
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update server %s, got error: %s", server.Id.ValueString(), err))
 		return diag.Diagnostics{clientDiag}
 	}
 
 	return mapServerResourceFromAPI(ctx, server, res)
 }
 
-func (r *serverResource) deleteFromAPI() diag.Diagnostics {
-	// TODO - Implement server deletion, but catch error, since not all servers can be deleted via the api
-	clientDiag := diag.NewWarningDiagnostic("Server Deletion Not Supported", "Server must be deleted manually in the Postmark UI.")
-	return diag.Diagnostics{clientDiag}
+func (r *serverResource) deleteFromAPI(ctx context.Context, server *resource_server.ServerModel) diag.Diagnostics {
+	err := r.client.DeleteServer(ctx, TypeStringToInt64(server.Id))
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to delete server %s, got error: %s", server.Id.ValueString(), err))
+		return diag.Diagnostics{clientDiag}
+	}
+
+	return nil
 }
 
 func mapServerResourceFromAPI(ctx context.Context, server *resource_server.ServerModel, res postmark.Server) diag.Diagnostics {

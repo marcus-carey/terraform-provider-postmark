@@ -201,7 +201,7 @@
 						}
 					},
 					{
-						"name": "email_address",
+						"name": "from_email",
 						"string": {
 							"computed_optional_required": "computed",
 							"description": "From email associated with sender signature."
@@ -793,7 +793,7 @@
 						}
 					},
 					{
-						"name": "email_address",
+						"name": "from_email",
 						"string": {
 							"computed_optional_required": "required",
 							"description": "From email associated with sender signature."

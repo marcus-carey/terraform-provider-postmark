@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"terraform-provider-postmark/internal/provider/resource_domain"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -59,9 +61,6 @@ func (r *domainResource) Create(ctx context.Context, req resource.CreateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	// Example data value setting
-	data.Id = types.StringValue("example-id")
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -123,58 +122,76 @@ func (r *domainResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	resp.Diagnostics.Append(r.deleteFromAPI(ctx, &data)...)
 }
 
-func (r *domainResource) readFromAPI(_ context.Context, _ *resource_domain.DomainModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	/*	res, err := r.client.GetDomain(ctx, domain.Id.ValueString())
-		if err != nil {
-			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read domain, got error: %s", err))
-			return diag.Diagnostics{clientDiag}
-		}
+func (r *domainResource) readFromAPI(ctx context.Context, domain *resource_domain.DomainModel) diag.Diagnostics {
+	res, err := r.client.GetDomain(ctx, TypeStringToInt64(domain.Id))
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read domain, got error: %s", err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-		return mapDomainResourceFromAPI(ctx, domain, res)*/
+	return mapDomainResourceFromAPI(ctx, domain, res)
 }
 
-func (r *domainResource) createFromAPI(_ context.Context, _ *resource_domain.DomainModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	/*	body := mapDomainResourceToAPI(domain)
-		res, err := r.client.CreateDomain(ctx, body)
-		if err != nil {
-			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create domain, got error: %s", err))
-			return diag.Diagnostics{clientDiag}
-		}
+func (r *domainResource) createFromAPI(ctx context.Context, domain *resource_domain.DomainModel) diag.Diagnostics {
+	body := postmark.DomainCreateRequest{
+		Name:             domain.Name.ValueString(),
+		ReturnPathDomain: domain.ReturnPathDomain.ValueString(),
+	}
+	res, err := r.client.CreateDomain(ctx, body)
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create domain, got error: %s", err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-		if res.ID == 0 {
-			clientDiag := diag.NewErrorDiagnostic("Client Error", "Unable to create domain, got error: Domain ID is 0.")
-			return diag.Diagnostics{clientDiag}
-		}
+	if res.ID == 0 {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", "Unable to create domain, got error: Domain ID is 0.")
+		return diag.Diagnostics{clientDiag}
+	}
 
-		return mapDomainResourceFromAPI(ctx, domain, res)*/
+	return mapDomainResourceFromAPI(ctx, domain, res)
 }
 
-func (r *domainResource) updateFromAPI(_ context.Context, _ *resource_domain.DomainModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	/*	id := domain.Id.ValueString()
-		body := mapDomainResourceToAPI(domain)
-		body.ID, _ = strconv.ParseInt(id, 10, 64)
-		res, err := r.client.EditDomain(ctx, id, body)
-		if err != nil {
-			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update domain %s, got error: %s\nRequest Body:\n%#v", id, err, body))
-			return diag.Diagnostics{clientDiag}
-		}
+func (r *domainResource) updateFromAPI(ctx context.Context, domain *resource_domain.DomainModel) diag.Diagnostics {
+	body := postmark.DomainEditRequest{
+		ReturnPathDomain: domain.ReturnPathDomain.ValueString(),
+	}
+	res, err := r.client.EditDomain(ctx, TypeStringToInt64(domain.Id), body)
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update domain %s, got error: %s", domain.Id.ValueString(), err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-		return mapDomainResourceFromAPI(ctx, domain, res)*/
+	return mapDomainResourceFromAPI(ctx, domain, res)
 }
 
-func (r *domainResource) deleteFromAPI(_ context.Context, _ *resource_domain.DomainModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-}
+func (r *domainResource) deleteFromAPI(ctx context.Context, domain *resource_domain.DomainModel) diag.Diagnostics {
+	err := r.client.DeleteDomain(ctx, TypeStringToInt64(domain.Id))
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to delete domain %s, got error: %s", domain.Id.ValueString(), err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-/*func mapDomainResourceToAPI(domain *resource_domain.DomainModel) postmark.Domain {
-	//return postmark.Domain{
-	//	Name:                       domain.Name.ValueString(),
-	//}
-}
-
-func mapDomainResourceFromAPI(ctx context.Context, domain *resource_domain.DomainModel, res postmark.Domain) diag.Diagnostics {
 	return nil
-}*/
+}
+
+func mapDomainResourceFromAPI(_ context.Context, domain *resource_domain.DomainModel, res postmark.DomainDetails) diag.Diagnostics {
+	domain.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
+	domain.Name = types.StringValue(res.Name)
+	domain.SpfHost = types.StringValue(res.SPFHost)
+	domain.SpfTextValue = types.StringValue(res.SPFTextValue)
+	domain.DkimVerified = types.BoolValue(res.DKIMVerified)
+	domain.WeakDkim = types.BoolValue(res.WeakDKIM)
+	domain.DkimHost = types.StringValue(res.DKIMHost)
+	domain.DkimTextValue = types.StringValue(res.DKIMTextValue)
+	domain.DkimPendingHost = types.StringValue(res.DKIMPendingHost)
+	domain.DkimPendingTextValue = types.StringValue(res.DKIMPendingTextValue)
+	domain.DkimRevokedHost = types.StringValue(res.DKIMRevokedHost)
+	domain.DkimRevokedTextValue = types.StringValue(res.DKIMRevokedTextValue)
+	domain.SafeToRemoveRevokedKeyFromDns = types.BoolValue(res.SafeToRemoveRevokedKeyFromDNS)
+	domain.DkimUpdateStatus = types.StringValue(res.DKIMUpdateStatus)
+	domain.ReturnPathDomain = types.StringValue(res.ReturnPathDomain)
+	domain.ReturnPathDomainVerified = types.BoolValue(res.ReturnPathDomainVerified)
+	domain.ReturnPathDomainCnameValue = types.StringValue(res.ReturnPathDomainCNAMEValue)
+
+	return nil
+}

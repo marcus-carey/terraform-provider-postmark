@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"terraform-provider-postmark/internal/provider/datasource_domain"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -49,23 +51,34 @@ func (d *domainDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	// Example data value setting
-	data.Id = types.StringValue("example-id")
-
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *domainDataSource) readFromAPI(_ context.Context, _ *datasource_domain.DomainModel) diag.Diagnostics {
-	return diag.Diagnostics{diag.NewErrorDiagnostic("Not Implemented", "This function is not implemented yet")}
-	// TODO - Implement the API call to read the domain
-	/*	res, err := d.client.GetDomain(ctx, domain.Id.ValueString())
-		if err != nil {
-			clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read domain, got error: %s", err))
-			return diag.Diagnostics{clientDiag}
-		}
+func (d *domainDataSource) readFromAPI(ctx context.Context, domain *datasource_domain.DomainModel) diag.Diagnostics {
+	res, err := d.client.GetDomain(ctx, TypeStringToInt64(domain.Id))
+	if err != nil {
+		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read domain, got error: %s", err))
+		return diag.Diagnostics{clientDiag}
+	}
 
-		// TODO - Implement the API response to the model
+	domain.Id = types.StringValue(strconv.FormatInt(res.ID, 10))
+	domain.Name = types.StringValue(res.Name)
+	domain.SpfHost = types.StringValue(res.SPFHost)
+	domain.SpfTextValue = types.StringValue(res.SPFTextValue)
+	domain.DkimVerified = types.BoolValue(res.DKIMVerified)
+	domain.WeakDkim = types.BoolValue(res.WeakDKIM)
+	domain.DkimHost = types.StringValue(res.DKIMHost)
+	domain.DkimTextValue = types.StringValue(res.DKIMTextValue)
+	domain.DkimPendingHost = types.StringValue(res.DKIMPendingHost)
+	domain.DkimPendingTextValue = types.StringValue(res.DKIMPendingTextValue)
+	domain.DkimRevokedHost = types.StringValue(res.DKIMRevokedHost)
+	domain.DkimRevokedTextValue = types.StringValue(res.DKIMRevokedTextValue)
+	domain.SafeToRemoveRevokedKeyFromDns = types.BoolValue(res.SafeToRemoveRevokedKeyFromDNS)
+	domain.DkimUpdateStatus = types.StringValue(res.DKIMUpdateStatus)
+	domain.ReturnPathDomain = types.StringValue(res.ReturnPathDomain)
+	domain.ReturnPathDomainVerified = types.BoolValue(res.ReturnPathDomainVerified)
+	domain.ReturnPathDomainCnameValue = types.StringValue(res.ReturnPathDomainCNAMEValue)
 
-		return nil*/
+	return nil
 }
