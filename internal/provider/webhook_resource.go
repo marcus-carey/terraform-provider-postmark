@@ -136,7 +136,7 @@ func (r *webhookResource) readFromAPI(ctx context.Context, webhook *resource_web
 
 func (r *webhookResource) createFromAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) diag.Diagnostics {
 	r.client.ServerToken = webhook.ServerApiToken.ValueString()
-	body := r.mapResourceToApi(ctx, webhook)
+	body := r.mapResourceToAPI(ctx, webhook)
 	res, err := r.client.CreateWebhook(ctx, body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create webhook, got error: %s", err))
@@ -153,7 +153,7 @@ func (r *webhookResource) createFromAPI(ctx context.Context, webhook *resource_w
 
 func (r *webhookResource) updateFromAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) diag.Diagnostics {
 	r.client.ServerToken = webhook.ServerApiToken.ValueString()
-	body := r.mapResourceToApi(ctx, webhook)
+	body := r.mapResourceToAPI(ctx, webhook)
 	res, err := r.client.EditWebhook(ctx, TypeStringToInt(webhook.Id), body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update webhook %s, got error: %s", webhook.Id, err))
@@ -174,7 +174,7 @@ func (r *webhookResource) deleteFromAPI(ctx context.Context, webhook *resource_w
 	return nil
 }
 
-func (r *webhookResource) mapResourceToApi(ctx context.Context, webhook *resource_webhook.WebhookModel) postmark.Webhook {
+func (r *webhookResource) mapResourceToAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) postmark.Webhook {
 	httpAuth := &postmark.WebhookHTTPAuth{}
 	if !webhook.HttpAuth.IsNull() {
 		httpAuth.Username = webhook.HttpAuth.Username.ValueString()

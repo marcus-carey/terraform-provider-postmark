@@ -13,8 +13,13 @@ description: |-
 ## Example Usage
 
 ```terraform
+data "postmark_server" "example" {
+  name = "Test-Terraform"
+}
+
 data "postmark_webhook" "example" {
-  id = 1111111
+  server_api_token = postmark_server.example.api_tokens[0]
+  message_stream   = "outbound"
 }
 ```
 
@@ -23,7 +28,7 @@ data "postmark_webhook" "example" {
 
 ### Required
 
-- `id` (String) ID of webhook.
+- `message_stream` (String) The stream this webhook is associated with.
 - `server_api_token` (String, Sensitive) The Server API token to use for API requests.
 
 ### Read-Only
@@ -33,7 +38,7 @@ data "postmark_webhook" "example" {
 - `delivery_trigger` (Attributes) Delivery trigger settings. (see [below for nested schema](#nestedatt--delivery_trigger))
 - `http_auth` (Attributes) Optional HTTP Auth credentials for the webhook. (see [below for nested schema](#nestedatt--http_auth))
 - `http_headers` (Attributes List) List of custom headers included. (see [below for nested schema](#nestedatt--http_headers))
-- `message_stream` (String) The stream this webhook is associated with. If no MessageStream is provided, the default transactional stream outbound will be used.
+- `id` (String) ID of webhook.
 - `open_trigger` (Attributes) Open trigger settings. (see [below for nested schema](#nestedatt--open_trigger))
 - `spam_complaint_trigger` (Attributes) Spam complaint trigger settings. (see [below for nested schema](#nestedatt--spam_complaint_trigger))
 - `subscription_change_trigger` (Attributes) Subscription change trigger settings. (see [below for nested schema](#nestedatt--subscription_change_trigger))

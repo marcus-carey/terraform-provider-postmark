@@ -13,11 +13,16 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "postmark_webhook" "example" {
-  url            = "http://www.example.com/webhook-test-tracking"
-  message_stream = "outbound"
+data "postmark_server" "example" {
+  name = "Test-Terraform"
+}
 
-  http_auth {
+resource "postmark_webhook" "example" {
+  server_api_token = data.postmark_server.example.api_tokens[0]
+  url              = "http://www.example.com/webhook-test-tracking"
+  message_stream   = "outbound"
+
+  http_auth = {
     username = "user"
     password = "pass"
   }
@@ -29,30 +34,30 @@ resource "postmark_webhook" "example" {
     }
   ]
 
-  open_trigger {
+  open_trigger = {
     enabled              = true
     post_first_open_only = false
   }
 
-  click_trigger {
+  click_trigger = {
     enabled = true
   }
 
-  delivery_trigger {
+  delivery_trigger = {
     enabled = true
   }
 
-  bounce_trigger {
+  bounce_trigger = {
     enabled         = false
     include_content = false
   }
 
-  spam_complaint_trigger {
+  spam_complaint_trigger = {
     enabled         = false
     include_content = false
   }
 
-  subscription_change_trigger {
+  subscription_change_trigger = {
     enabled = false
   }
 }

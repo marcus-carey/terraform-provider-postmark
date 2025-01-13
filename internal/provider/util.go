@@ -23,13 +23,12 @@ func parseListType(ctx context.Context, list types.List, val []string) (basetype
 
 	if len(val) == 0 {
 		return types.ListNull(listType), nil
-	} else {
-		parsed, diags := types.ListValueFrom(ctx, listType, val)
-
-		if diags.HasError() {
-			return types.ListNull(listType), diags
-		}
-
-		return parsed, nil
 	}
+	parsed, diags := types.ListValueFrom(ctx, listType, val)
+
+	if diags.HasError() {
+		return types.ListNull(listType), diags
+	}
+
+	return parsed, nil
 }

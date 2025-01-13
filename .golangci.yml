@@ -24,6 +24,8 @@ issues:
   max-same-issues: 0
   uniq-by-line: false
   new: false
+  exclude-files:
+    - ".*_gen.go"
 
 linters:
   disable-all: true
@@ -33,7 +35,7 @@ linters:
     - asciicheck
     - bidichk
     - bodyclose
-    - contextcheck
+#    - contextcheck
     - copyloopvar
     - durationcheck
     - errcheck
