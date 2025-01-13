@@ -122,14 +122,14 @@ func WebhookDataSourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "List of custom headers included.",
 			},
 			"id": schema.StringAttribute{
-				Required:            true,
+				Computed:            true,
 				Description:         "ID of webhook.",
 				MarkdownDescription: "ID of webhook.",
 			},
 			"message_stream": schema.StringAttribute{
-				Computed:            true,
-				Description:         "The stream this webhook is associated with. If no MessageStream is provided, the default transactional stream outbound will be used.",
-				MarkdownDescription: "The stream this webhook is associated with. If no MessageStream is provided, the default transactional stream outbound will be used.",
+				Required:            true,
+				Description:         "The stream this webhook is associated with.",
+				MarkdownDescription: "The stream this webhook is associated with.",
 			},
 			"open_trigger": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{

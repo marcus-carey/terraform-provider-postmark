@@ -446,8 +446,8 @@
 					{
 						"name": "message_stream",
 						"string": {
-							"computed_optional_required": "computed",
-							"description": "The stream this webhook is associated with. If no MessageStream is provided, the default transactional stream outbound will be used."
+							"computed_optional_required": "required",
+							"description": "The stream this webhook is associated with."
 						}
 					},
 					{
@@ -619,7 +619,7 @@
 					{
 						"name": "id",
 						"string": {
-							"computed_optional_required": "required",
+							"computed_optional_required": "computed",
 							"description": "ID of webhook."
 						}
 					}
