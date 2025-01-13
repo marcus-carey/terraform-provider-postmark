@@ -2,15 +2,14 @@ module terraform-provider-postmark
 
 go 1.23
 
-// TODO - remove once fix is merged
-replace github.com/mrz1836/postmark => /Users/marcuscarey/GolandProjects/postmark
+//replace github.com/mrz1836/postmark => /Users/marcuscarey/GolandProjects/postmark
 
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.20.1
 	github.com/hashicorp/terraform-plugin-framework v1.13.0
 	github.com/hashicorp/terraform-plugin-framework-validators v0.16.0
 	github.com/hashicorp/terraform-plugin-go v0.25.0
-	github.com/mrz1836/postmark v1.6.7
+	github.com/mrz1836/postmark v1.7.0
 )
 
 require (

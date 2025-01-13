@@ -252,7 +252,7 @@ github.com/mitchellh/go-testing-interface
 # github.com/mitchellh/reflectwalk v1.0.2
 ## explicit
 github.com/mitchellh/reflectwalk
-# github.com/mrz1836/postmark v1.6.7 => /Users/marcuscarey/GolandProjects/postmark
+# github.com/mrz1836/postmark v1.7.0
 ## explicit; go 1.18
 github.com/mrz1836/postmark
 # github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e
@@ -466,4 +466,3 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
-# github.com/mrz1836/postmark => /Users/marcuscarey/GolandProjects/postmark
