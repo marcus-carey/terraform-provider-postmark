@@ -4,8 +4,17 @@ This is a terraform provider for Postmark Account Management such as servers, se
 
 This provider uses the Postmark API facilitated by the community library [Postmark Golang](https://github.com/mrz1836/postmark) by [Mr. Z](https://github.com/mrz1836).
 
-> [!CAUTION]
-> **It is a work in progress and is not yet ready for production use.**
+### Supported Resources/DataSources
+- [x] Server [resource.tf](examples/resources/postmark_server/resource.tf)
+- [x] Sender Signatures [resource.tf](examples/resources/postmark_sender_signature/resource.tf)
+- [x] Domains [resource.tf](examples/resources/postmark_domain/resource.tf)
+- [x] Webhooks [resource.tf](examples/resources/postmark_webhook/resource.tf)
+
+### Roadmap
+- [ ] Templates
+- [ ] Message Streams
+- [ ] Triggers: Inbound Rules
+- [ ] Block that will verify domain DKIM and Return Path on an interval using verify endpoints
 
 ## Developing Locally
 

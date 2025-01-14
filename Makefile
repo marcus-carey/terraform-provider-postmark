@@ -80,3 +80,23 @@ generate-schema:
 
 generate-docs:
 	go generate ./...
+
+tag: ## Generate a new tag and push (tag version=0.0.0)
+	@echo "creating new tag..."
+	@test $(version)
+	@git tag -a v$(version) -m "Pending full release..."
+	@git push origin v$(version)
+	@git fetch --tags -f
+
+tag-remove: ## Remove a tag if found (tag-remove version=0.0.0)
+	@echo "removing tag..."
+	@test $(version)
+	@git tag -d v$(version)
+	@git push --delete origin v$(version)
+	@git fetch --tags
+
+tag-update: ## Update an existing tag to current commit (tag-update version=0.0.0)
+	@echo "updating tag to new commit..."
+	@test $(version)
+	@git push --force origin HEAD:refs/tags/v$(version)
+	@git fetch --tags -f
