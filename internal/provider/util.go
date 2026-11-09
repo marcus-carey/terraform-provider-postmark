@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/mrz1836/postmark"
 )
 
 func TypeStringToInt64(value types.String) int64 {
@@ -31,4 +32,14 @@ func parseListType(ctx context.Context, list types.List, val []string) (basetype
 	}
 
 	return parsed, nil
+}
+
+// serverScopedClient returns a copy of the shared provider client that uses the given
+// server token. Terraform runs resource operations concurrently against one provider
+// client, so setting ServerToken on the shared client lets one server's token leak into
+// another resource's request.
+func serverScopedClient(client *postmark.Client, serverToken string) *postmark.Client {
+	scoped := *client
+	scoped.ServerToken = serverToken
+	return &scoped
 }

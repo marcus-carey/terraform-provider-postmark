@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 	"terraform-provider-postmark/internal/provider/resource_webhook"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -41,9 +42,47 @@ func (r *webhookResource) Configure(_ context.Context, req resource.ConfigureReq
 	r.client = GetResourcePostmarkClient(req, resp)
 }
 
+// ImportState takes "<server_id>:<webhook_id>". Webhooks are server-scoped, so Read needs
+// the server's API token; the server ID lets the import look it up with the account token.
 func (r *webhookResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Retrieve import ID and save to id attribute
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	serverID, webhookID, err := parseWebhookImportID(req.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid Import ID", err.Error())
+		return
+	}
+
+	server, err := r.client.GetServer(ctx, serverID)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read server %d, got error: %s", serverID, err))
+		return
+	}
+
+	if len(server.APITokens) == 0 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Server %d has no API tokens.", serverID))
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), strconv.Itoa(webhookID))...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("server_api_token"), server.APITokens[0])...)
+}
+
+func parseWebhookImportID(id string) (int64, int, error) {
+	parts := strings.Split(id, ":")
+	if len(parts) != 2 {
+		return 0, 0, fmt.Errorf("expected import ID in the form <server_id>:<webhook_id>, got %q", id)
+	}
+
+	serverID, err := strconv.ParseInt(parts[0], 10, 64)
+	if err != nil || serverID <= 0 {
+		return 0, 0, fmt.Errorf("server ID must be a positive integer, got %q", parts[0])
+	}
+
+	webhookID, err := strconv.Atoi(parts[1])
+	if err != nil || webhookID <= 0 {
+		return 0, 0, fmt.Errorf("webhook ID must be a positive integer, got %q", parts[1])
+	}
+
+	return serverID, webhookID, nil
 }
 
 func (r *webhookResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -124,8 +163,8 @@ func (r *webhookResource) Delete(ctx context.Context, req resource.DeleteRequest
 }
 
 func (r *webhookResource) readFromAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) diag.Diagnostics {
-	r.client.ServerToken = webhook.ServerApiToken.ValueString()
-	res, err := r.client.GetWebhook(ctx, TypeStringToInt(webhook.Id))
+	client := serverScopedClient(r.client, webhook.ServerApiToken.ValueString())
+	res, err := client.GetWebhook(ctx, TypeStringToInt(webhook.Id))
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read webhook, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
@@ -135,9 +174,9 @@ func (r *webhookResource) readFromAPI(ctx context.Context, webhook *resource_web
 }
 
 func (r *webhookResource) createFromAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) diag.Diagnostics {
-	r.client.ServerToken = webhook.ServerApiToken.ValueString()
+	client := serverScopedClient(r.client, webhook.ServerApiToken.ValueString())
 	body := r.mapResourceToAPI(ctx, webhook)
-	res, err := r.client.CreateWebhook(ctx, body)
+	res, err := client.CreateWebhook(ctx, body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to create webhook, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
@@ -152,9 +191,9 @@ func (r *webhookResource) createFromAPI(ctx context.Context, webhook *resource_w
 }
 
 func (r *webhookResource) updateFromAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) diag.Diagnostics {
-	r.client.ServerToken = webhook.ServerApiToken.ValueString()
+	client := serverScopedClient(r.client, webhook.ServerApiToken.ValueString())
 	body := r.mapResourceToAPI(ctx, webhook)
-	res, err := r.client.EditWebhook(ctx, TypeStringToInt(webhook.Id), body)
+	res, err := client.EditWebhook(ctx, TypeStringToInt(webhook.Id), body)
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to update webhook %s, got error: %s", webhook.Id, err))
 		return diag.Diagnostics{clientDiag}
@@ -164,8 +203,8 @@ func (r *webhookResource) updateFromAPI(ctx context.Context, webhook *resource_w
 }
 
 func (r *webhookResource) deleteFromAPI(ctx context.Context, webhook *resource_webhook.WebhookModel) diag.Diagnostics {
-	r.client.ServerToken = webhook.ServerApiToken.ValueString()
-	err := r.client.DeleteWebhook(ctx, TypeStringToInt(webhook.Id))
+	client := serverScopedClient(r.client, webhook.ServerApiToken.ValueString())
+	err := client.DeleteWebhook(ctx, TypeStringToInt(webhook.Id))
 	if err != nil {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to delete webhook %s, got error: %s", webhook.Id.ValueString(), err))
 		return diag.Diagnostics{clientDiag}

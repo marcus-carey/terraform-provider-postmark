@@ -57,8 +57,8 @@ func (d *webhookDataSource) Read(ctx context.Context, req datasource.ReadRequest
 }
 
 func (d *webhookDataSource) readFromAPI(ctx context.Context, webhook *datasource_webhook.WebhookModel) diag.Diagnostics {
-	d.client.ServerToken = webhook.ServerApiToken.ValueString()
-	webhooks, err := d.client.ListWebhooks(ctx, webhook.MessageStream.ValueString())
+	client := serverScopedClient(d.client, webhook.ServerApiToken.ValueString())
+	webhooks, err := client.ListWebhooks(ctx, webhook.MessageStream.ValueString())
 	if err != nil || len(webhooks) == 0 {
 		clientDiag := diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Unable to read webhook, got error: %s", err))
 		return diag.Diagnostics{clientDiag}
