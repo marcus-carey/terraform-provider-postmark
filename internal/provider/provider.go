@@ -37,7 +37,6 @@ func (p *postmarkProvider) Configure(ctx context.Context, req provider.Configure
 		return
 	}
 
-	println("Account Token:", data.AccountToken.String())
 	client := postmark.NewClient("[SERVER-TOKEN]", data.AccountToken.ValueString())
 
 	// TODO determine how to test connection to fail earlier
